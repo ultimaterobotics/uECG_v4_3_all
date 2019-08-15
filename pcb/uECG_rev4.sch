@@ -1,0 +1,1955 @@
+EESchema Schematic File Version 4
+LIBS:uECG_rev4-cache
+EELAYER 29 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L uECG_rev4-rescue:nRF52832-QFxx-MCU_Nordic-3CG_V1.0-rescue U1
+U 1 1 5C0423D6
+P 8800 2950
+F 0 "U1" H 8800 1164 50  0000 C CNN
+F 1 "nRF52832-QFxx" H 8800 1073 50  0000 C CNN
+F 2 "ultimate_library:QFN-48-1EP_6x6mm_Pitch0.4mm" H 8800 850 50  0001 C CNN
+F 3 "http://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.4.pdf" H 8300 3150 50  0001 C CNN
+	1    8800 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:MCP1703A-3302_SOT23-Regulator_Linear-3CG_V1.0-rescue U6
+U 1 1 5C042715
+P 5050 6950
+F 0 "U6" H 5050 7192 50  0000 C CNN
+F 1 "MCP1703A-3302_SOT23" H 5050 7101 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5050 7150 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20005122B.pdf" H 5050 6900 50  0001 C CNN
+	1    5050 6950
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C2
+U 1 1 5C0427B6
+P 8200 850
+F 0 "C2" H 8085 804 50  0000 R CNN
+F 1 "1 uF" H 8085 895 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 8238 700 50  0001 C CNN
+F 3 "~" H 8200 850 50  0001 C CNN
+	1    8200 850 
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C3
+U 1 1 5C042928
+P 8500 850
+F 0 "C3" H 8385 804 50  0000 R CNN
+F 1 "100p" H 8385 895 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 8538 700 50  0001 C CNN
+F 3 "~" H 8500 850 50  0001 C CNN
+	1    8500 850 
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C4
+U 1 1 5C042958
+P 8800 850
+F 0 "C4" H 8685 804 50  0000 R CNN
+F 1 "100n" H 8685 895 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 8838 700 50  0001 C CNN
+F 3 "~" H 8800 850 50  0001 C CNN
+	1    8800 850 
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C1
+U 1 1 5C042A1B
+P 7850 850
+F 0 "C1" H 7735 804 50  0000 R CNN
+F 1 "100n" H 7735 895 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 7888 700 50  0001 C CNN
+F 3 "~" H 7850 850 50  0001 C CNN
+	1    7850 850 
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:+3.3V-power-3CG_V1.0-rescue #PWR061
+U 1 1 5C042BDC
+P 5450 6900
+F 0 "#PWR061" H 5450 6750 50  0001 C CNN
+F 1 "+3.3V" H 5538 6937 50  0000 L CNN
+F 2 "" H 5450 6900 50  0001 C CNN
+F 3 "" H 5450 6900 50  0001 C CNN
+	1    5450 6900
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C21
+U 1 1 5C042CE6
+P 4650 7200
+F 0 "C21" H 4764 7154 50  0000 L CNN
+F 1 "1 uF" H 4764 7245 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 4688 7050 50  0001 C CNN
+F 3 "~" H 4650 7200 50  0001 C CNN
+	1    4650 7200
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C22
+U 1 1 5C042E5A
+P 5450 7200
+F 0 "C22" H 5335 7154 50  0000 R CNN
+F 1 "1 uF" H 5335 7245 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 5488 7050 50  0001 C CNN
+F 3 "~" H 5450 7200 50  0001 C CNN
+	1    5450 7200
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C12
+U 1 1 5C043006
+P 7200 2600
+F 0 "C12" V 7452 2600 50  0000 C CNN
+F 1 "12p" V 7361 2600 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 7238 2450 50  0001 C CNN
+F 3 "~" H 7200 2600 50  0001 C CNN
+	1    7200 2600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C13
+U 1 1 5C043209
+P 7200 3300
+F 0 "C13" V 7452 3300 50  0000 C CNN
+F 1 "12p" V 7361 3300 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 7238 3150 50  0001 C CNN
+F 3 "~" H 7200 3300 50  0001 C CNN
+	1    7200 3300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR036
+U 1 1 5C0432E0
+P 8800 4650
+F 0 "#PWR036" H 8800 4400 50  0001 C CNN
+F 1 "GND" H 8805 4477 50  0000 C CNN
+F 2 "" H 8800 4650 50  0001 C CNN
+F 3 "" H 8800 4650 50  0001 C CNN
+	1    8800 4650
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR028
+U 1 1 5C043499
+P 7050 3300
+F 0 "#PWR028" H 7050 3050 50  0001 C CNN
+F 1 "GND" V 7055 3172 50  0000 R CNN
+F 2 "" H 7050 3300 50  0001 C CNN
+F 3 "" H 7050 3300 50  0001 C CNN
+	1    7050 3300
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR024
+U 1 1 5C0435DC
+P 7050 2600
+F 0 "#PWR024" H 7050 2350 50  0001 C CNN
+F 1 "GND" V 7055 2472 50  0000 R CNN
+F 2 "" H 7050 2600 50  0001 C CNN
+F 3 "" H 7050 2600 50  0001 C CNN
+	1    7050 2600
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR02
+U 1 1 5C0436CB
+P 7850 700
+F 0 "#PWR02" H 7850 450 50  0001 C CNN
+F 1 "GND" H 7855 527 50  0000 C CNN
+F 2 "" H 7850 700 50  0001 C CNN
+F 3 "" H 7850 700 50  0001 C CNN
+	1    7850 700 
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR03
+U 1 1 5C043976
+P 8200 700
+F 0 "#PWR03" H 8200 450 50  0001 C CNN
+F 1 "GND" H 8205 527 50  0000 C CNN
+F 2 "" H 8200 700 50  0001 C CNN
+F 3 "" H 8200 700 50  0001 C CNN
+	1    8200 700 
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR04
+U 1 1 5C043999
+P 8500 700
+F 0 "#PWR04" H 8500 450 50  0001 C CNN
+F 1 "GND" H 8505 527 50  0000 C CNN
+F 2 "" H 8500 700 50  0001 C CNN
+F 3 "" H 8500 700 50  0001 C CNN
+	1    8500 700 
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR05
+U 1 1 5C0439BC
+P 8800 700
+F 0 "#PWR05" H 8800 450 50  0001 C CNN
+F 1 "GND" H 8805 527 50  0000 C CNN
+F 2 "" H 8800 700 50  0001 C CNN
+F 3 "" H 8800 700 50  0001 C CNN
+	1    8800 700 
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	8800 1000 8800 1150
+Text GLabel 7900 3750 0    50   Input ~ 0
+SWDIO
+Text GLabel 7900 3650 0    50   Input ~ 0
+SWDCLK
+Wire Wire Line
+	7350 2600 7450 2600
+Wire Wire Line
+	7650 2600 7650 2750
+Wire Wire Line
+	7650 2750 7900 2750
+Wire Wire Line
+	7900 3150 7650 3150
+Wire Wire Line
+	7650 3150 7650 3300
+Connection ~ 7450 2600
+Wire Wire Line
+	7450 2600 7650 2600
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR026
+U 1 1 5C0444E6
+P 7250 2950
+F 0 "#PWR026" H 7250 2700 50  0001 C CNN
+F 1 "GND" V 7255 2822 50  0000 R CNN
+F 2 "" H 7250 2950 50  0001 C CNN
+F 3 "" H 7250 2950 50  0001 C CNN
+	1    7250 2950
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR027
+U 1 1 5C04450B
+P 7650 2950
+F 0 "#PWR027" H 7650 2700 50  0001 C CNN
+F 1 "GND" V 7850 2913 50  0000 C CNN
+F 2 "" H 7650 2950 50  0001 C CNN
+F 3 "" H 7650 2950 50  0001 C CNN
+	1    7650 2950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:Crystal_GND24-Device-3CG_V1.0-rescue Y1
+U 1 1 5C0448C6
+P 7450 2950
+F 0 "Y1" V 7496 2709 50  0000 R CNN
+F 1 "Crystal_GND24" V 7405 2709 50  0000 R CNN
+F 2 "ultimate_library:Crystal_SMD_2520-4pin_2.5x2.0mm" H 7450 2950 50  0001 C CNN
+F 3 "~" H 7450 2950 50  0001 C CNN
+	1    7450 2950
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	7350 3300 7450 3300
+Wire Wire Line
+	7450 2600 7450 2800
+Wire Wire Line
+	7450 3100 7450 3300
+Connection ~ 7450 3300
+Wire Wire Line
+	7450 3300 7650 3300
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C10
+U 1 1 5C04565D
+P 7750 2100
+F 0 "C10" H 7865 2146 50  0000 L CNN
+F 1 "0.8 pF" H 7865 2055 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 7788 1950 50  0001 C CNN
+F 3 "~" H 7750 2100 50  0001 C CNN
+	1    7750 2100
+	1    0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C9
+U 1 1 5C04573D
+P 7050 2100
+F 0 "C9" H 7165 2146 50  0000 L CNN
+F 1 "N.C." H 7165 2055 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 7088 1950 50  0001 C CNN
+F 3 "~" H 7050 2100 50  0001 C CNN
+	1    7050 2100
+	1    0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:L-Device-3CG_V1.0-rescue L1
+U 1 1 5C0457BB
+P 7400 2250
+F 0 "L1" V 7590 2250 50  0000 C CNN
+F 1 "3.9nH" V 7499 2250 50  0000 C CNN
+F 2 "Inductor_SMD:L_0402_1005Metric" H 7400 2250 50  0001 C CNN
+F 3 "~" H 7400 2250 50  0001 C CNN
+	1    7400 2250
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	7550 2250 7750 2250
+Wire Wire Line
+	7250 2250 7050 2250
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR018
+U 1 1 5C045DAD
+P 7050 1950
+F 0 "#PWR018" H 7050 1700 50  0001 C CNN
+F 1 "GND" H 6972 1913 50  0000 R CNN
+F 2 "" H 7050 1950 50  0001 C CNN
+F 3 "" H 7050 1950 50  0001 C CNN
+	1    7050 1950
+	1    0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR019
+U 1 1 5C045EC8
+P 7750 1950
+F 0 "#PWR019" H 7750 1700 50  0001 C CNN
+F 1 "GND" H 7672 1913 50  0000 R CNN
+F 2 "" H 7750 1950 50  0001 C CNN
+F 3 "" H 7750 1950 50  0001 C CNN
+	1    7750 1950
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	7050 2250 6850 2250
+Connection ~ 7050 2250
+$Comp
+L uECG_rev4-rescue:Antenna-Device-3CG_V1.0-rescue AE1
+U 1 1 5C046164
+P 6850 2050
+F 0 "AE1" H 6930 2041 50  0000 L CNN
+F 1 "Antenna" H 6930 1950 50  0000 L CNN
+F 2 "RF_Antenna:Texas_SWRA117D_2.4GHz_Left" H 6850 2050 50  0001 C CNN
+F 3 "~" H 6850 2050 50  0001 C CNN
+	1    6850 2050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8500 1000 8500 1250
+Wire Wire Line
+	8600 1250 8600 1100
+Wire Wire Line
+	8200 1100 8200 1000
+Wire Wire Line
+	8200 1100 8600 1100
+Wire Wire Line
+	7850 1000 7850 1200
+Wire Wire Line
+	7850 1200 8300 1200
+Wire Wire Line
+	8300 1200 8300 1250
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR066
+U 1 1 5C047D7E
+P 4650 7350
+F 0 "#PWR066" H 4650 7100 50  0001 C CNN
+F 1 "GND" H 4655 7177 50  0000 C CNN
+F 2 "" H 4650 7350 50  0001 C CNN
+F 3 "" H 4650 7350 50  0001 C CNN
+	1    4650 7350
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR067
+U 1 1 5C047F98
+P 5450 7350
+F 0 "#PWR067" H 5450 7100 50  0001 C CNN
+F 1 "GND" H 5455 7177 50  0000 C CNN
+F 2 "" H 5450 7350 50  0001 C CNN
+F 3 "" H 5450 7350 50  0001 C CNN
+	1    5450 7350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5350 6950 5450 6950
+Wire Wire Line
+	5450 6950 5450 6900
+Wire Wire Line
+	5450 6950 5450 7050
+Connection ~ 5450 6950
+Wire Wire Line
+	4750 6950 4650 6950
+Wire Wire Line
+	4650 6950 4650 7050
+$Comp
+L uECG_rev4-rescue:+BATT-power-3CG_V1.0-rescue #PWR062
+U 1 1 5C048F15
+P 4650 6950
+F 0 "#PWR062" H 4650 6800 50  0001 C CNN
+F 1 "+BATT" H 4593 6987 50  0000 R CNN
+F 2 "" H 4650 6950 50  0001 C CNN
+F 3 "" H 4650 6950 50  0001 C CNN
+	1    4650 6950
+	1    0    0    -1  
+$EndComp
+Connection ~ 4650 6950
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR064
+U 1 1 5C049676
+P 5050 7250
+F 0 "#PWR064" H 5050 7000 50  0001 C CNN
+F 1 "GND" H 5055 7077 50  0000 C CNN
+F 2 "" H 5050 7250 50  0001 C CNN
+F 3 "" H 5050 7250 50  0001 C CNN
+	1    5050 7250
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R5
+U 1 1 5C04A323
+P 10350 2000
+F 0 "R5" H 10420 2046 50  0000 L CNN
+F 1 "2k" H 10420 1955 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 10280 2000 50  0001 C CNN
+F 3 "~" H 10350 2000 50  0001 C CNN
+	1    10350 2000
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR046
+U 1 1 5C04B53B
+P 6500 5500
+F 0 "#PWR046" H 6500 5250 50  0001 C CNN
+F 1 "GND" H 6422 5463 50  0000 R CNN
+F 2 "" H 6500 5500 50  0001 C CNN
+F 3 "" H 6500 5500 50  0001 C CNN
+	1    6500 5500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR044
+U 1 1 5C04B881
+P 5300 5400
+F 0 "#PWR044" H 5300 5150 50  0001 C CNN
+F 1 "GNDA" V 5305 5273 50  0000 R CNN
+F 2 "" H 5300 5400 50  0001 C CNN
+F 3 "" H 5300 5400 50  0001 C CNN
+	1    5300 5400
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:MCP1703A-3302_SOT23-Regulator_Linear-3CG_V1.0-rescue U5
+U 1 1 5C04C5B5
+P 5050 6150
+F 0 "U5" H 5050 6392 50  0000 C CNN
+F 1 "MCP1703A-3302_SOT23" H 5050 6301 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5050 6350 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20005122B.pdf" H 5050 6100 50  0001 C CNN
+	1    5050 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR057
+U 1 1 5C04C780
+P 5050 6450
+F 0 "#PWR057" H 5050 6200 50  0001 C CNN
+F 1 "GNDA" H 5055 6277 50  0000 C CNN
+F 2 "" H 5050 6450 50  0001 C CNN
+F 3 "" H 5050 6450 50  0001 C CNN
+	1    5050 6450
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR058
+U 1 1 5C04C9A7
+P 5550 6450
+F 0 "#PWR058" H 5550 6200 50  0001 C CNN
+F 1 "GNDA" H 5555 6277 50  0000 C CNN
+F 2 "" H 5550 6450 50  0001 C CNN
+F 3 "" H 5550 6450 50  0001 C CNN
+	1    5550 6450
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C19
+U 1 1 5C04CB6A
+P 5550 6300
+F 0 "C19" H 5435 6254 50  0000 R CNN
+F 1 "1 uF" H 5435 6345 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 5588 6150 50  0001 C CNN
+F 3 "~" H 5550 6300 50  0001 C CNN
+	1    5550 6300
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5350 6150 5550 6150
+$Comp
+L uECG_rev4-rescue:+3.3VA-power-3CG_V1.0-rescue #PWR053
+U 1 1 5C04DA21
+P 5550 6150
+F 0 "#PWR053" H 5550 6000 50  0001 C CNN
+F 1 "+3.3VA" H 5565 6323 50  0000 C CNN
+F 2 "" H 5550 6150 50  0001 C CNN
+F 3 "" H 5550 6150 50  0001 C CNN
+	1    5550 6150
+	1    0    0    -1  
+$EndComp
+Connection ~ 5550 6150
+$Comp
+L uECG_rev4-rescue:+3.3VA-power-3CG_V1.0-rescue #PWR038
+U 1 1 5C04DB6E
+P 5300 4900
+F 0 "#PWR038" H 5300 4750 50  0001 C CNN
+F 1 "+3.3VA" V 5315 5027 50  0000 L CNN
+F 2 "" H 5300 4900 50  0001 C CNN
+F 3 "" H 5300 4900 50  0001 C CNN
+	1    5300 4900
+	0    -1   -1   0   
+$EndComp
+Text GLabel 5300 3500 0    50   Input ~ 0
+CH0+
+Text GLabel 5300 3600 0    50   Input ~ 0
+CH0-
+Text GLabel 5300 3800 0    50   Input ~ 0
+CH1-
+Text GLabel 5300 3900 0    50   Input ~ 0
+CH1+
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C18
+U 1 1 5C050DCB
+P 4600 6300
+F 0 "C18" H 4485 6254 50  0000 R CNN
+F 1 "1 uF" H 4485 6345 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 4638 6150 50  0001 C CNN
+F 3 "~" H 4600 6300 50  0001 C CNN
+	1    4600 6300
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4750 6150 4600 6150
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR056
+U 1 1 5C051CCE
+P 4600 6450
+F 0 "#PWR056" H 4600 6200 50  0001 C CNN
+F 1 "GND" H 4605 6277 50  0000 C CNN
+F 2 "" H 4600 6450 50  0001 C CNN
+F 3 "" H 4600 6450 50  0001 C CNN
+	1    4600 6450
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:+BATT-power-3CG_V1.0-rescue #PWR035
+U 1 1 5C051D89
+P 2750 4650
+F 0 "#PWR035" H 2750 4500 50  0001 C CNN
+F 1 "+BATT" H 2693 4687 50  0000 R CNN
+F 2 "" H 2750 4650 50  0001 C CNN
+F 3 "" H 2750 4650 50  0001 C CNN
+	1    2750 4650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 4700 4750 4700
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C15
+U 1 1 5C05291E
+P 4750 4850
+F 0 "C15" H 4865 4804 50  0000 L CNN
+F 1 "100n (NP0)" H 4865 4895 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 4788 4700 50  0001 C CNN
+F 3 "~" H 4750 4850 50  0001 C CNN
+	1    4750 4850
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR040
+U 1 1 5C052A53
+P 4750 5000
+F 0 "#PWR040" H 4750 4750 50  0001 C CNN
+F 1 "GNDA" H 4755 4827 50  0000 C CNN
+F 2 "" H 4750 5000 50  0001 C CNN
+F 3 "" H 4750 5000 50  0001 C CNN
+	1    4750 5000
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDS-power-3CG_V1.0-rescue #PWR01
+U 1 1 5C056E06
+P 2000 700
+F 0 "#PWR01" H 2000 450 50  0001 C CNN
+F 1 "GNDS" H 2005 527 50  0000 C CNN
+F 2 "" H 2000 700 50  0001 C CNN
+F 3 "" H 2000 700 50  0001 C CNN
+	1    2000 700 
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R1
+U 1 1 5C056F98
+P 1750 700
+F 0 "R1" V 1543 700 50  0000 C CNN
+F 1 "10" V 1634 700 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 1680 700 50  0001 C CNN
+F 3 "~" H 1750 700 50  0001 C CNN
+	1    1750 700 
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1900 700  2000 700 
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R2
+U 1 1 5C05B4A1
+P 1200 1200
+F 0 "R2" H 1130 1154 50  0000 R CNN
+F 1 "510k" H 1130 1245 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 1130 1200 50  0001 C CNN
+F 3 "~" H 1200 1200 50  0001 C CNN
+	1    1200 1200
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R3
+U 1 1 5C05C11E
+P 1200 1550
+F 0 "R3" H 1130 1504 50  0000 R CNN
+F 1 "200k" H 1130 1595 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 1130 1550 50  0001 C CNN
+F 3 "~" H 1200 1550 50  0001 C CNN
+	1    1200 1550
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C8
+U 1 1 5C05C31E
+P 800 1550
+F 0 "C8" H 685 1504 50  0000 R CNN
+F 1 "100n" H 685 1595 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 838 1400 50  0001 C CNN
+F 3 "~" H 800 1550 50  0001 C CNN
+	1    800  1550
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	800  1400 1200 1400
+Connection ~ 1200 1400
+$Comp
+L uECG_rev4-rescue:+3.3VA-power-3CG_V1.0-rescue #PWR08
+U 1 1 5C05DF54
+P 1200 1050
+F 0 "#PWR08" H 1200 900 50  0001 C CNN
+F 1 "+3.3VA" H 1215 1223 50  0000 C CNN
+F 2 "" H 1200 1050 50  0001 C CNN
+F 3 "" H 1200 1050 50  0001 C CNN
+	1    1200 1050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1200 1350 1200 1400
+Text GLabel 6500 4000 2    50   Input ~ 0
+MISO
+Text GLabel 6500 4100 2    50   Input ~ 0
+MOSI
+Text GLabel 6500 3900 2    50   Input ~ 0
+SCLK
+Text GLabel 6500 3800 2    50   Input ~ 0
+CS
+Text GLabel 6500 3500 2    50   Input ~ 0
+F_CLK
+Text GLabel 6500 4300 2    50   Input ~ 0
+DR
+$Comp
+L uECG_rev4-rescue:+3.3VA-power-3CG_V1.0-rescue #PWR09
+U 1 1 5C070325
+P 2900 1050
+F 0 "#PWR09" H 2900 900 50  0001 C CNN
+F 1 "+3.3VA" H 2915 1223 50  0000 C CNN
+F 2 "" H 2900 1050 50  0001 C CNN
+F 3 "" H 2900 1050 50  0001 C CNN
+	1    2900 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR013
+U 1 1 5C070370
+P 1750 1550
+F 0 "#PWR013" H 1750 1300 50  0001 C CNN
+F 1 "GNDA" H 1755 1377 50  0000 C CNN
+F 2 "" H 1750 1550 50  0001 C CNN
+F 3 "" H 1750 1550 50  0001 C CNN
+	1    1750 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR017
+U 1 1 5C073BA3
+P 1200 1700
+F 0 "#PWR017" H 1200 1450 50  0001 C CNN
+F 1 "GNDA" H 1205 1527 50  0000 C CNN
+F 2 "" H 1200 1700 50  0001 C CNN
+F 3 "" H 1200 1700 50  0001 C CNN
+	1    1200 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR016
+U 1 1 5C073D4E
+P 800 1700
+F 0 "#PWR016" H 800 1450 50  0001 C CNN
+F 1 "GNDA" H 805 1527 50  0000 C CNN
+F 2 "" H 800 1700 50  0001 C CNN
+F 3 "" H 800 1700 50  0001 C CNN
+	1    800  1700
+	1    0    0    -1  
+$EndComp
+Text GLabel 9800 2750 2    50   Input ~ 0
+MISO
+Text GLabel 9800 2650 2    50   Input ~ 0
+MOSI
+Text GLabel 9800 2850 2    50   Input ~ 0
+SCLK
+Text GLabel 9800 2950 2    50   Input ~ 0
+CS
+Text GLabel 9800 3050 2    50   Input ~ 0
+F_CLK
+Text GLabel 9800 3150 2    50   Input ~ 0
+DR
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR047
+U 1 1 5C07858A
+P 10450 5600
+F 0 "#PWR047" H 10450 5350 50  0001 C CNN
+F 1 "GND" H 10455 5427 50  0000 C CNN
+F 2 "" H 10450 5600 50  0001 C CNN
+F 3 "" H 10450 5600 50  0001 C CNN
+	1    10450 5600
+	1    0    0    -1  
+$EndComp
+Text GLabel 10450 5500 2    50   Input ~ 0
+SWDCLK
+Text GLabel 10450 5400 2    50   Input ~ 0
+SWDIO
+$Comp
+L uECG_rev4-rescue:+3.3V-power-3CG_V1.0-rescue #PWR043
+U 1 1 5C07BBC7
+P 10450 5300
+F 0 "#PWR043" H 10450 5150 50  0001 C CNN
+F 1 "+3.3V" H 10538 5337 50  0000 L CNN
+F 2 "" H 10450 5300 50  0001 C CNN
+F 3 "" H 10450 5300 50  0001 C CNN
+	1    10450 5300
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R9
+U 1 1 5C04D57A
+P 1400 2300
+F 0 "R9" H 1330 2254 50  0000 R CNN
+F 1 "100k" H 1330 2345 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 1330 2300 50  0001 C CNN
+F 3 "~" H 1400 2300 50  0001 C CNN
+	1    1400 2300
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C6
+U 1 1 5C06957F
+P 3300 1300
+F 0 "C6" V 3552 1300 50  0000 C CNN
+F 1 "10 uF" V 3461 1300 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3338 1150 50  0001 C CNN
+F 3 "~" H 3300 1300 50  0001 C CNN
+	1    3300 1300
+	0    -1   -1   0   
+$EndComp
+Text GLabel 3600 1300 2    50   Input ~ 0
+CH0+
+Text GLabel 4600 3750 2    50   Input ~ 0
+CH0-
+$Comp
+L uECG_rev4-rescue:GNDS-power-3CG_V1.0-rescue #PWR029
+U 1 1 5C080AA5
+P 4500 3850
+F 0 "#PWR029" H 4500 3600 50  0001 C CNN
+F 1 "GNDS" H 4588 3813 50  0000 L CNN
+F 2 "" H 4500 3850 50  0001 C CNN
+F 3 "" H 4500 3850 50  0001 C CNN
+	1    4500 3850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4600 3750 4500 3750
+Wire Wire Line
+	4500 3750 4500 3850
+Text GLabel 4600 3650 2    50   Input ~ 0
+CH1-
+Wire Wire Line
+	4500 3750 4500 3650
+Wire Wire Line
+	4500 3650 4600 3650
+Connection ~ 4500 3750
+Wire Wire Line
+	3550 1300 3600 1300
+$Comp
+L uECG_rev4-rescue:GNDS-power-3CG_V1.0-rescue #PWR023
+U 1 1 5C0A3DCC
+P 1400 2500
+F 0 "#PWR023" H 1400 2250 50  0001 C CNN
+F 1 "GNDS" H 1405 2327 50  0000 C CNN
+F 2 "" H 1400 2500 50  0001 C CNN
+F 3 "" H 1400 2500 50  0001 C CNN
+	1    1400 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:Conn_01x01_Male-Connector-3CG_V1.0-rescue E-1
+U 1 1 5C0D3BC9
+P 1700 2150
+F 0 "E-1" H 1672 2173 50  0000 R CNN
+F 1 "Conn_01x01_Male" H 1672 2082 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 1700 2150 50  0001 C CNN
+F 3 "~" H 1700 2150 50  0001 C CNN
+	1    1700 2150
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:USB_B_Micro-Connector-3CG_V1.0-rescue J2
+U 1 1 5C10F16E
+P 900 5600
+F 0 "J2" H 955 6067 50  0000 C CNN
+F 1 "USB_B_Micro" H 955 5976 50  0000 C CNN
+F 2 "ultimate_library:conn_usb_B_micro_smd_our" H 1050 5550 50  0001 C CNN
+F 3 "~" H 1050 5550 50  0001 C CNN
+	1    900  5600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2500 5400 2500 5700
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR050
+U 1 1 5C112FB7
+P 900 6000
+F 0 "#PWR050" H 900 5750 50  0001 C CNN
+F 1 "GND" H 905 5827 50  0000 C CNN
+F 2 "" H 900 6000 50  0001 C CNN
+F 3 "" H 900 6000 50  0001 C CNN
+	1    900  6000
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR049
+U 1 1 5C113030
+P 800 6000
+F 0 "#PWR049" H 800 5750 50  0001 C CNN
+F 1 "GND" H 805 5827 50  0000 C CNN
+F 2 "" H 800 6000 50  0001 C CNN
+F 3 "" H 800 6000 50  0001 C CNN
+	1    800  6000
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR051
+U 1 1 5C11ECEE
+P 1650 6100
+F 0 "#PWR051" H 1650 5850 50  0001 C CNN
+F 1 "GND" H 1655 5927 50  0000 C CNN
+F 2 "" H 1650 6100 50  0001 C CNN
+F 3 "" H 1650 6100 50  0001 C CNN
+	1    1650 6100
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR055
+U 1 1 5C11ED69
+P 2500 6300
+F 0 "#PWR055" H 2500 6050 50  0001 C CNN
+F 1 "GND" H 2505 6127 50  0000 C CNN
+F 2 "" H 2500 6300 50  0001 C CNN
+F 3 "" H 2500 6300 50  0001 C CNN
+	1    2500 6300
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:Conn_01x01_Male-Connector-3CG_V1.0-rescue J6
+U 1 1 5C11F4A1
+P 3900 6550
+F 0 "J6" H 3872 6573 50  0000 R CNN
+F 1 "Conn_01x01_Male" H 3872 6482 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 3900 6550 50  0001 C CNN
+F 3 "~" H 3900 6550 50  0001 C CNN
+	1    3900 6550
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR060
+U 1 1 5C11F78A
+P 4100 6550
+F 0 "#PWR060" H 4100 6300 50  0001 C CNN
+F 1 "GND" H 4105 6377 50  0000 C CNN
+F 2 "" H 4100 6550 50  0001 C CNN
+F 3 "" H 4100 6550 50  0001 C CNN
+	1    4100 6550
+	1    0    0    -1  
+$EndComp
+Text GLabel 5150 800  0    50   Input ~ 0
+MISO
+Wire Wire Line
+	5150 800  5350 800 
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR012
+U 1 1 5C077D62
+P 5250 1450
+F 0 "#PWR012" H 5250 1200 50  0001 C CNN
+F 1 "GND" H 5172 1413 50  0000 R CNN
+F 2 "" H 5250 1450 50  0001 C CNN
+F 3 "" H 5250 1450 50  0001 C CNN
+	1    5250 1450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5250 1450 5250 1400
+Wire Wire Line
+	5350 1400 5250 1400
+Text GLabel 6800 1400 2    50   Input ~ 0
+MOSI
+Wire Wire Line
+	6800 1400 6550 1400
+Text GLabel 6800 1300 2    50   Input ~ 0
+SCLK
+Wire Wire Line
+	6800 1300 6550 1300
+Text GLabel 6800 1200 2    50   Input ~ 0
+BMI_CS
+Wire Wire Line
+	6800 1200 6550 1200
+$Comp
+L uECG_rev4-rescue:+3.3V-power-3CG_V1.0-rescue #PWR011
+U 1 1 5C08F02B
+P 4800 1200
+F 0 "#PWR011" H 4800 1050 50  0001 C CNN
+F 1 "+3.3V" V 4815 1328 50  0000 L CNN
+F 2 "" H 4800 1200 50  0001 C CNN
+F 3 "" H 4800 1200 50  0001 C CNN
+	1    4800 1200
+	0    -1   -1   0   
+$EndComp
+Text GLabel 9800 3250 2    50   Input ~ 0
+BMI_CS
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R15
+U 1 1 5C0B97FB
+P 6750 4600
+F 0 "R15" H 6680 4554 50  0000 R CNN
+F 1 "200k" H 6680 4645 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 6680 4600 50  0001 C CNN
+F 3 "~" H 6750 4600 50  0001 C CNN
+	1    6750 4600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:+3.3V-power-3CG_V1.0-rescue #PWR034
+U 1 1 5C0BD0AC
+P 6900 4600
+F 0 "#PWR034" H 6900 4450 50  0001 C CNN
+F 1 "+3.3V" V 6915 4728 50  0000 L CNN
+F 2 "" H 6900 4600 50  0001 C CNN
+F 3 "" H 6900 4600 50  0001 C CNN
+	1    6900 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:Conn_01x01_Male-Connector-3CG_V1.0-rescue J5
+U 1 1 5C0BEB26
+P 3500 6550
+F 0 "J5" H 3607 6325 50  0000 C CNN
+F 1 "Conn_01x01_Male" H 3607 6416 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x01_Pitch2.54mm" H 3500 6550 50  0001 C CNN
+F 3 "~" H 3500 6550 50  0001 C CNN
+	1    3500 6550
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:Conn_01x01_Male-Connector-3CG_V1.0-rescue J3
+U 1 1 5C0BEE42
+P 9100 5800
+F 0 "J3" H 9207 5575 50  0000 C CNN
+F 1 "Conn_01x01_Male" H 9207 5666 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x01_Pitch2.54mm" H 9100 5800 50  0001 C CNN
+F 3 "~" H 9100 5800 50  0001 C CNN
+	1    9100 5800
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:+BATT-power-3CG_V1.0-rescue #PWR065
+U 1 1 5C0D91EF
+P 2700 7300
+F 0 "#PWR065" H 2700 7150 50  0001 C CNN
+F 1 "+BATT" H 2643 7337 50  0000 R CNN
+F 2 "" H 2700 7300 50  0001 C CNN
+F 3 "" H 2700 7300 50  0001 C CNN
+	1    2700 7300
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R17
+U 1 1 5C0D9C61
+P 7400 5800
+F 0 "R17" H 7470 5846 50  0000 L CNN
+F 1 "2k" H 7470 5755 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 7330 5800 50  0001 C CNN
+F 3 "~" H 7400 5800 50  0001 C CNN
+	1    7400 5800
+	0    -1   -1   0   
+$EndComp
+Text GLabel 7150 5800 0    50   Input ~ 0
+DRIVER
+Text GLabel 9800 3350 2    50   Input ~ 0
+DRIVER
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR054
+U 1 1 5C102DCE
+P 7650 6150
+F 0 "#PWR054" H 7650 5900 50  0001 C CNN
+F 1 "GND" H 7655 5977 50  0000 C CNN
+F 2 "" H 7650 6150 50  0001 C CNN
+F 3 "" H 7650 6150 50  0001 C CNN
+	1    7650 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:SW_SPDT-Switch-3CG_V1.0-rescue SW2
+U 1 1 5C05B913
+P 2900 7300
+F 0 "SW2" H 2900 7585 50  0000 C CNN
+F 1 "SW_SPDT" H 2900 7494 50  0000 C CNN
+F 2 "ultimate_library:Slider_Switch_ali" H 2900 7300 50  0001 C CNN
+F 3 "" H 2900 7300 50  0001 C CNN
+	1    2900 7300
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R20
+U 1 1 5C068245
+P 1100 7050
+F 0 "R20" H 1170 7096 50  0000 L CNN
+F 1 "100k" H 1170 7005 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 1030 7050 50  0001 C CNN
+F 3 "~" H 1100 7050 50  0001 C CNN
+	1    1100 7050
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R19
+U 1 1 5C0686FB
+P 1100 6700
+F 0 "R19" H 1170 6746 50  0000 L CNN
+F 1 "200k" H 1170 6655 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 1030 6700 50  0001 C CNN
+F 3 "~" H 1100 6700 50  0001 C CNN
+	1    1100 6700
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:+BATT-power-3CG_V1.0-rescue #PWR059
+U 1 1 5C068A28
+P 1100 6550
+F 0 "#PWR059" H 1100 6400 50  0001 C CNN
+F 1 "+BATT" H 1043 6587 50  0000 R CNN
+F 2 "" H 1100 6550 50  0001 C CNN
+F 3 "" H 1100 6550 50  0001 C CNN
+	1    1100 6550
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C20
+U 1 1 5C0697AC
+P 750 7050
+F 0 "C20" H 635 7004 50  0000 R CNN
+F 1 "100n" H 635 7095 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 788 6900 50  0001 C CNN
+F 3 "~" H 750 7050 50  0001 C CNN
+	1    750  7050
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	750  6900 1100 6900
+Wire Wire Line
+	1100 6850 1100 6900
+Connection ~ 1100 6900
+Wire Wire Line
+	750  7200 1100 7200
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR063
+U 1 1 5C074ACA
+P 1100 7200
+F 0 "#PWR063" H 1100 6950 50  0001 C CNN
+F 1 "GND" H 1105 7027 50  0000 C CNN
+F 2 "" H 1100 7200 50  0001 C CNN
+F 3 "" H 1100 7200 50  0001 C CNN
+	1    1100 7200
+	1    0    0    -1  
+$EndComp
+Connection ~ 1100 7200
+Text GLabel 1400 6900 2    50   Input ~ 0
+BATT_LEVEL
+Wire Wire Line
+	1100 6900 1400 6900
+Text GLabel 9850 1650 2    50   Input ~ 0
+BATT_LEVEL
+Wire Wire Line
+	9700 1650 9850 1650
+$Comp
+L ultimate_library:LED_ARGB(a3) D2
+U 1 1 5C07E376
+P 10700 2200
+F 0 "D2" H 10700 2697 50  0000 C CNN
+F 1 "LED_ARGB(a3)" H 10700 2606 50  0000 C CNN
+F 2 "ultimate_library:LED_RGB_0603" H 10700 2150 50  0001 C CNN
+F 3 "" H 10700 2150 50  0001 C CNN
+	1    10700 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R7
+U 1 1 5C087E54
+P 10350 2200
+F 0 "R7" H 10420 2246 50  0000 L CNN
+F 1 "2k" H 10420 2155 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 10280 2200 50  0001 C CNN
+F 3 "~" H 10350 2200 50  0001 C CNN
+	1    10350 2200
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R10
+U 1 1 5C08889E
+P 10350 2400
+F 0 "R10" H 10420 2446 50  0000 L CNN
+F 1 "2k" H 10420 2355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 10280 2400 50  0001 C CNN
+F 3 "~" H 10350 2400 50  0001 C CNN
+	1    10350 2400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	9700 2050 10200 2050
+Wire Wire Line
+	10200 2050 10200 2000
+Wire Wire Line
+	9700 2150 10200 2150
+Wire Wire Line
+	10200 2150 10200 2200
+Wire Wire Line
+	9700 2250 10200 2250
+Wire Wire Line
+	10200 2250 10200 2400
+$Comp
+L uECG_rev4-rescue:+3.3V-power-3CG_V1.0-rescue #PWR020
+U 1 1 5C09CECE
+P 10900 2200
+F 0 "#PWR020" H 10900 2050 50  0001 C CNN
+F 1 "+3.3V" H 10915 2373 50  0000 C CNN
+F 2 "" H 10900 2200 50  0001 C CNN
+F 3 "" H 10900 2200 50  0001 C CNN
+	1    10900 2200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9700 2650 9800 2650
+Wire Wire Line
+	9700 2750 9800 2750
+Wire Wire Line
+	9700 2850 9800 2850
+Wire Wire Line
+	9700 2950 9800 2950
+Wire Wire Line
+	9700 3050 9800 3050
+Wire Wire Line
+	9700 3150 9800 3150
+Wire Wire Line
+	9700 3250 9800 3250
+Wire Wire Line
+	9700 3350 9800 3350
+$Comp
+L uECG_rev4-rescue:SW_Push-Switch-3CG_V1.0-rescue SW1
+U 1 1 5C0C3B63
+P 10200 3950
+F 0 "SW1" H 10200 4235 50  0000 C CNN
+F 1 "SW_Push" H 10200 4144 50  0000 C CNN
+F 2 "Buttons_Switches_SMD:SW_SPST_B3U-1000P" H 10200 4150 50  0001 C CNN
+F 3 "" H 10200 4150 50  0001 C CNN
+	1    10200 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR031
+U 1 1 5C0C6D82
+P 10400 3950
+F 0 "#PWR031" H 10400 3700 50  0001 C CNN
+F 1 "GND" H 10405 3777 50  0000 C CNN
+F 2 "" H 10400 3950 50  0001 C CNN
+F 3 "" H 10400 3950 50  0001 C CNN
+	1    10400 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9700 3950 10000 3950
+$Comp
+L uECG_rev4-rescue:Conn_01x01_Male-Connector-3CG_V1.0-rescue J4
+U 1 1 5C0D3D58
+P 9100 6250
+F 0 "J4" H 9207 6025 50  0000 C CNN
+F 1 "Conn_01x01_Male" H 9207 6116 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 9100 6250 50  0001 C CNN
+F 3 "~" H 9100 6250 50  0001 C CNN
+	1    9100 6250
+	-1   0    0    1   
+$EndComp
+$Comp
+L uECG_rev4-rescue:+3.3V-power-3CG_V1.0-rescue #PWR010
+U 1 1 5C0D6C64
+P 8900 1150
+F 0 "#PWR010" H 8900 1000 50  0001 C CNN
+F 1 "+3.3V" H 8988 1187 50  0000 L CNN
+F 2 "" H 8900 1150 50  0001 C CNN
+F 3 "" H 8900 1150 50  0001 C CNN
+	1    8900 1150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8900 1150 8800 1150
+Connection ~ 8800 1150
+Wire Wire Line
+	8800 1150 8800 1250
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR015
+U 1 1 5C785F2A
+P 3550 1650
+F 0 "#PWR015" H 3550 1400 50  0001 C CNN
+F 1 "GNDA" H 3555 1477 50  0000 C CNN
+F 2 "" H 3550 1650 50  0001 C CNN
+F 3 "" H 3550 1650 50  0001 C CNN
+	1    3550 1650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1750 1500 1750 1550
+$Comp
+L uECG_rev4-rescue:+3.3V-power-3CG_V1.0-rescue #PWR07
+U 1 1 5C79A7DC
+P 6750 800
+F 0 "#PWR07" H 6750 650 50  0001 C CNN
+F 1 "+3.3V" V 6765 928 50  0000 L CNN
+F 2 "" H 6750 800 50  0001 C CNN
+F 3 "" H 6750 800 50  0001 C CNN
+	1    6750 800 
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5250 1400 5250 1300
+Wire Wire Line
+	5250 1300 5350 1300
+Connection ~ 5250 1400
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C7
+U 1 1 5C7A7CC6
+P 4900 1400
+F 0 "C7" H 5015 1354 50  0000 L CNN
+F 1 "100n" H 5015 1445 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 4938 1250 50  0001 C CNN
+F 3 "~" H 4900 1400 50  0001 C CNN
+	1    4900 1400
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4800 1200 4900 1200
+Wire Wire Line
+	4900 1250 4900 1200
+Connection ~ 4900 1200
+Wire Wire Line
+	4900 1200 5350 1200
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR014
+U 1 1 5C7B7A24
+P 4900 1550
+F 0 "#PWR014" H 4900 1300 50  0001 C CNN
+F 1 "GND" H 4822 1513 50  0000 R CNN
+F 2 "" H 4900 1550 50  0001 C CNN
+F 3 "" H 4900 1550 50  0001 C CNN
+	1    4900 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C17
+U 1 1 5C7C45FA
+P 1450 5750
+F 0 "C17" H 1335 5704 50  0000 R CNN
+F 1 "1 uF" H 1335 5795 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 1488 5600 50  0001 C CNN
+F 3 "~" H 1450 5750 50  0001 C CNN
+	1    1450 5750
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1200 5400 1450 5400
+Wire Wire Line
+	1450 5600 1450 5400
+Connection ~ 1450 5400
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR048
+U 1 1 5C7D62B0
+P 1450 5900
+F 0 "#PWR048" H 1450 5650 50  0001 C CNN
+F 1 "GND" H 1455 5727 50  0000 C CNN
+F 2 "" H 1450 5900 50  0001 C CNN
+F 3 "" H 1450 5900 50  0001 C CNN
+	1    1450 5900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7150 5800 7250 5800
+Wire Wire Line
+	7550 5800 7650 5800
+Wire Wire Line
+	7650 6000 7650 6150
+Wire Wire Line
+	8850 6000 8850 6250
+Wire Wire Line
+	8850 5800 8900 5800
+Wire Wire Line
+	8850 6250 8900 6250
+Wire Wire Line
+	6550 800  6750 800 
+$Comp
+L uECG_rev4-rescue:LED-Device-3CG_V1.0-rescue D1
+U 1 1 5C775C47
+P 3550 1500
+F 0 "D1" V 3588 1383 50  0000 R CNN
+F 1 "LED" V 3497 1383 50  0000 R CNN
+F 2 "LED_SMD:LED_0402_1005Metric" H 3550 1500 50  0001 C CNN
+F 3 "~" H 3550 1500 50  0001 C CNN
+	1    3550 1500
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3550 1350 3550 1300
+Connection ~ 3550 1300
+Wire Wire Line
+	3100 5900 3100 6550
+Wire Wire Line
+	2900 5900 3100 5900
+Wire Wire Line
+	3100 6550 3100 7200
+Connection ~ 3100 6550
+Text GLabel 4000 2050 2    50   Input ~ 0
+CH1+
+Wire Wire Line
+	4000 2050 3900 2050
+$Comp
+L uECG_rev4-rescue:SIP32509DT-T1-GE3-SIP32509DT-T1-GE3-3CG_V1.0-rescue IC3
+U 1 1 5C760369
+P 1400 4700
+F 0 "IC3" H 2000 4965 50  0000 C CNN
+F 1 "SIP32509DT-T1-GE3" H 2000 4874 50  0000 C CNN
+F 2 "SIP32509DT-T1-GE3:SOT95P284X110-6N" H 2450 4800 50  0001 L CNN
+F 3 "http://www.mouser.com/datasheet/2/427/sip32508-469358.pdf" H 2450 4700 50  0001 L CNN
+F 4 "Power Switch ICs - Power Distribution 1.1V to 5.5V Slew Rt 3A Cntrld Load Swtch" H 2450 4600 50  0001 L CNN "Description"
+F 5 "1.1" H 2450 4500 50  0001 L CNN "Height"
+F 6 "Vishay" H 2450 4400 50  0001 L CNN "Manufacturer_Name"
+F 7 "SIP32509DT-T1-GE3" H 2450 4300 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 2450 4200 50  0001 L CNN "RS Part Number"
+F 9 "" H 2450 4100 50  0001 L CNN "RS Price/Stock"
+F 10 "" H 2450 4000 50  0001 L CNN "Mouser Part Number"
+F 11 "" H 2450 3900 50  0001 L CNN "Mouser Price/Stock"
+	1    1400 4700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2600 4700 2750 4700
+Wire Wire Line
+	2750 4700 2750 4650
+Wire Wire Line
+	2600 4800 2750 4800
+Wire Wire Line
+	2750 4800 2750 4700
+Connection ~ 2750 4700
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR037
+U 1 1 5C76ECAD
+P 2600 4900
+F 0 "#PWR037" H 2600 4650 50  0001 C CNN
+F 1 "GND" H 2605 4727 50  0000 C CNN
+F 2 "" H 2600 4900 50  0001 C CNN
+F 3 "" H 2600 4900 50  0001 C CNN
+	1    2600 4900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4600 6150 4550 6150
+Connection ~ 4600 6150
+$Comp
+L uECG_rev4-rescue:+3.3VP-power-3CG_V1.0-rescue #PWR052
+U 1 1 5C773EB3
+P 4550 6150
+F 0 "#PWR052" H 4700 6100 50  0001 C CNN
+F 1 "+3.3VP" H 4570 6293 50  0000 C CNN
+F 2 "" H 4550 6150 50  0001 C CNN
+F 3 "" H 4550 6150 50  0001 C CNN
+	1    4550 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:+3.3VP-power-3CG_V1.0-rescue #PWR033
+U 1 1 5C773F37
+P 1300 4600
+F 0 "#PWR033" H 1450 4550 50  0001 C CNN
+F 1 "+3.3VP" H 1320 4743 50  0000 C CNN
+F 2 "" H 1300 4600 50  0001 C CNN
+F 3 "" H 1300 4600 50  0001 C CNN
+	1    1300 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1400 4700 1300 4700
+Wire Wire Line
+	1300 4700 1300 4600
+Wire Wire Line
+	1400 4800 1300 4800
+Wire Wire Line
+	1300 4800 1300 4700
+Connection ~ 1300 4700
+Wire Wire Line
+	9700 4350 9800 4350
+Text GLabel 9800 4350 2    50   Input ~ 0
+AMP_PWR
+Text GLabel 1300 4900 0    50   Input ~ 0
+AMP_PWR
+Wire Wire Line
+	1300 4900 1400 4900
+Wire Wire Line
+	5350 1100 5250 1100
+Text GLabel 5250 1100 0    50   Input ~ 0
+BMI_INT1
+Text GLabel 9800 3450 2    50   Input ~ 0
+BMI_INT1
+Wire Wire Line
+	9700 3450 9800 3450
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C14
+U 1 1 5C7C9B87
+P 950 4550
+F 0 "C14" H 835 4504 50  0000 R CNN
+F 1 "100n" H 835 4595 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 988 4400 50  0001 C CNN
+F 3 "~" H 950 4550 50  0001 C CNN
+	1    950  4550
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1300 4700 950  4700
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR032
+U 1 1 5C7CFA0B
+P 950 4400
+F 0 "#PWR032" H 950 4150 50  0001 C CNN
+F 1 "GND" H 955 4227 50  0000 C CNN
+F 2 "" H 950 4400 50  0001 C CNN
+F 3 "" H 950 4400 50  0001 C CNN
+	1    950  4400
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6600 4600 6500 4600
+$Comp
+L uECG_rev4-rescue:AD8606ARZ-AD8606ARZ-3CG_V1.0-rescue IC2
+U 1 1 5CDF97C9
+P 1750 1200
+F 0 "IC2" H 2300 1465 50  0000 C CNN
+F 1 "AD8606ARZ" H 2300 1374 50  0000 C CNN
+F 2 "Package_SO:MSOP-8_3x3mm_P0.65mm" H 2700 1300 50  0001 L CNN
+F 3 "http://www.analog.com/static/imported-files/data_sheets/AD8605_8606_8608.pdf" H 2700 1200 50  0001 L CNN
+F 4 "AD8606ARZ, Dual Operational Amplifier 10MHz CMOS, R-R, 3, 5V, 8-Pin SOIC" H 2700 1100 50  0001 L CNN "Description"
+F 5 "1.75" H 2700 1000 50  0001 L CNN "Height"
+F 6 "Analog Devices" H 2700 900 50  0001 L CNN "Manufacturer_Name"
+F 7 "AD8606ARZ" H 2700 800 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "584-AD8606ARZ" H 2700 700 50  0001 L CNN "Mouser Part Number"
+F 9 "https://www.mouser.com/Search/Refine.aspx?Keyword=584-AD8606ARZ" H 2700 600 50  0001 L CNN "Mouser Price/Stock"
+F 10 "9127589" H 2700 500 50  0001 L CNN "RS Part Number"
+F 11 "http://uk.rs-online.com/web/p/products/9127589" H 2700 400 50  0001 L CNN "RS Price/Stock"
+	1    1750 1200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1200 1400 1750 1400
+Wire Wire Line
+	1750 1300 1600 1300
+Wire Wire Line
+	1600 1300 1600 1200
+Wire Wire Line
+	1600 1200 1750 1200
+Connection ~ 1600 1200
+Wire Wire Line
+	2850 1300 2950 1300
+$Comp
+L uECG_rev4-rescue:BMI160-BMI160-3CG_V1.0-rescue IC1
+U 1 1 5CE40E53
+P 5350 800
+F 0 "IC1" H 5950 1065 50  0000 C CNN
+F 1 "BMI160" H 5950 974 50  0000 C CNN
+F 2 "BMI160:PQFN50P300X250X88-14N" H 6400 900 50  0001 L CNN
+F 3 "https://ae-bst.resource.bosch.com/media/products/dokumente/bmi160/BST-BMI160-DS000-07.pdf" H 6400 800 50  0001 L CNN
+F 4 "IMUs - Inertial Measurement Units 6-Axis 950uA" H 6400 700 50  0001 L CNN "Description"
+F 5 "0.88" H 6400 600 50  0001 L CNN "Height"
+F 6 "Bosch Sensortec" H 6400 500 50  0001 L CNN "Manufacturer_Name"
+F 7 "BMI160" H 6400 400 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 6400 300 50  0001 L CNN "RS Part Number"
+F 9 "" H 6400 200 50  0001 L CNN "RS Price/Stock"
+F 10 "262-BMI160" H 6400 100 50  0001 L CNN "Mouser Part Number"
+F 11 "https://www.mouser.com/Search/Refine.aspx?Keyword=262-BMI160" H 6400 0   50  0001 L CNN "Mouser Price/Stock"
+	1    5350 800 
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:VOS617B-7T-VOS617B-7T-3CG_V1.0-rescue U3
+U 1 1 5CE4BD56
+P 8250 5900
+F 0 "U3" H 8250 6270 50  0000 C CNN
+F 1 "VOS617B-7T" H 8250 6179 50  0000 C CNN
+F 2 "VOS617B-7T:SOIC127P700X210-4N" H 8250 5900 50  0001 L BNN
+F 3 "Optocoupler, Phototransistor Output, Low Input Current, SSOP-4, Half Pitch, Mini-Flat Package" H 8250 5900 50  0001 L BNN
+F 4 "None" H 8250 5900 50  0001 L BNN "Field4"
+F 5 "Unavailable" H 8250 5900 50  0001 L BNN "Field5"
+F 6 "VOS617B-7T" H 8250 5900 50  0001 L BNN "Field6"
+F 7 "Vishay" H 8250 5900 50  0001 L BNN "Field7"
+F 8 "SSOP-4 Vishay" H 8250 5900 50  0001 L BNN "Field8"
+	1    8250 5900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2850 1200 2900 1200
+Wire Wire Line
+	2900 1050 2900 1200
+Wire Wire Line
+	7750 2250 7900 2250
+Connection ~ 7750 2250
+Wire Wire Line
+	2950 1400 2950 1300
+Connection ~ 2950 1300
+Wire Wire Line
+	2850 1400 2950 1400
+$Comp
+L uECG_rev4-rescue:+3.3VA-power-3CG_V1.0-rescue #PWR025
+U 1 1 5CF45945
+P 2000 2500
+F 0 "#PWR025" H 2000 2350 50  0001 C CNN
+F 1 "+3.3VA" H 2015 2673 50  0000 C CNN
+F 2 "" H 2000 2500 50  0001 C CNN
+F 3 "" H 2000 2500 50  0001 C CNN
+	1    2000 2500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2950 1300 3150 1300
+Wire Wire Line
+	2950 1400 3050 1400
+Connection ~ 2950 1400
+$Comp
+L uECG_rev4-rescue:Conn_01x01_Male-Connector-3CG_V1.0-rescue E+1
+U 1 1 5C0D366B
+P 2300 1900
+F 0 "E+1" H 2272 1923 50  0000 R CNN
+F 1 "Conn_01x01_Male" H 2272 1832 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 2300 1900 50  0001 C CNN
+F 3 "~" H 2300 1900 50  0001 C CNN
+	1    2300 1900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 1300 3550 1300
+Wire Wire Line
+	3050 1400 3050 2050
+Wire Wire Line
+	3050 2050 3100 2050
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R6
+U 1 1 5CFD5619
+P 3250 2050
+F 0 "R6" V 3043 2050 50  0000 C CNN
+F 1 "22k" V 3134 2050 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 3180 2050 50  0001 C CNN
+F 3 "~" H 3250 2050 50  0001 C CNN
+	1    3250 2050
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C11
+U 1 1 5CFD56EF
+P 3900 2250
+F 0 "C11" V 4152 2250 50  0000 C CNN
+F 1 "10 nF" V 4061 2250 50  0000 C CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 3938 2100 50  0001 C CNN
+F 3 "~" H 3900 2250 50  0001 C CNN
+	1    3900 2250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3400 2050 3550 2050
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R8
+U 1 1 5CFE62F9
+P 3550 2300
+F 0 "R8" V 3343 2300 50  0000 C CNN
+F 1 "10k" V 3434 2300 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 3480 2300 50  0001 C CNN
+F 3 "~" H 3550 2300 50  0001 C CNN
+	1    3550 2300
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3550 2150 3550 2050
+Wire Wire Line
+	3900 2100 3900 2050
+Wire Wire Line
+	3900 2050 3550 2050
+Connection ~ 3550 2050
+Wire Wire Line
+	3900 2400 3900 2450
+Wire Wire Line
+	1600 700  1600 1200
+Connection ~ 3900 2050
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR041
+U 1 1 5CD815B2
+P 5050 5050
+F 0 "#PWR041" H 5050 4800 50  0001 C CNN
+F 1 "GNDA" H 5055 4877 50  0000 C CNN
+F 2 "" H 5050 5050 50  0001 C CNN
+F 3 "" H 5050 5050 50  0001 C CNN
+	1    5050 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDS-power-3CG_V1.0-rescue #PWR021
+U 1 1 5CDCB4BF
+P 3550 2450
+F 0 "#PWR021" H 3550 2200 50  0001 C CNN
+F 1 "GNDS" H 3638 2413 50  0000 L CNN
+F 2 "" H 3550 2450 50  0001 C CNN
+F 3 "" H 3550 2450 50  0001 C CNN
+	1    3550 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDS-power-3CG_V1.0-rescue #PWR022
+U 1 1 5CDE26B0
+P 3900 2450
+F 0 "#PWR022" H 3900 2200 50  0001 C CNN
+F 1 "GNDS" H 3988 2413 50  0000 L CNN
+F 2 "" H 3900 2450 50  0001 C CNN
+F 3 "" H 3900 2450 50  0001 C CNN
+	1    3900 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L ultimate_library:MCP3911(QFN) U2
+U 1 1 5CD038B0
+P 5850 4550
+F 0 "U2" H 5900 5915 50  0000 C CNN
+F 1 "MCP3911(QFN)" H 5900 5824 50  0000 C CNN
+F 2 "Package_DFN_QFN:QFN-20-1EP_4x4mm_P0.5mm_EP2.5x2.5mm" H 5850 4550 50  0001 C CNN
+F 3 "" H 5850 4550 50  0001 C CNN
+	1    5850 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR045
+U 1 1 5CD0DB91
+P 5300 5500
+F 0 "#PWR045" H 5300 5250 50  0001 C CNN
+F 1 "GNDA" V 5305 5373 50  0000 R CNN
+F 2 "" H 5300 5500 50  0001 C CNN
+F 3 "" H 5300 5500 50  0001 C CNN
+	1    5300 5500
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5300 4800 5050 4800
+Wire Wire Line
+	5050 4800 5050 5050
+$Comp
+L uECG_rev4-rescue:C-Device-3CG_V1.0-rescue C16
+U 1 1 5CD449FA
+P 5300 5050
+F 0 "C16" H 5185 5004 50  0000 R CNN
+F 1 "100n" H 5185 5095 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 5338 4900 50  0001 C CNN
+F 3 "~" H 5300 5050 50  0001 C CNN
+	1    5300 5050
+	-1   0    0    1   
+$EndComp
+Connection ~ 5300 4900
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR042
+U 1 1 5CD44F27
+P 5300 5200
+F 0 "#PWR042" H 5300 4950 50  0001 C CNN
+F 1 "GNDA" H 5305 5027 50  0000 C CNN
+F 2 "" H 5300 5200 50  0001 C CNN
+F 3 "" H 5300 5200 50  0001 C CNN
+	1    5300 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:+3.3V-power-3CG_V1.0-rescue #PWR039
+U 1 1 5CD451D0
+P 6500 4900
+F 0 "#PWR039" H 6500 4750 50  0001 C CNN
+F 1 "+3.3V" V 6515 5028 50  0000 L CNN
+F 2 "" H 6500 4900 50  0001 C CNN
+F 3 "" H 6500 4900 50  0001 C CNN
+	1    6500 4900
+	0    1    -1   0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R4
+U 1 1 5D552A74
+P 2850 1750
+F 0 "R4" H 2780 1704 50  0000 R CNN
+F 1 "100k" H 2780 1795 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 2780 1750 50  0001 C CNN
+F 3 "~" H 2850 1750 50  0001 C CNN
+	1    2850 1750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2850 1600 2850 1500
+$Comp
+L Battery_Management:MCP73831-2-OT U4
+U 1 1 5D5926CB
+P 2500 6000
+F 0 "U4" H 2500 6481 50  0000 C CNN
+F 1 "MCP73831-2-OT" H 2500 6390 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5" H 2550 5750 50  0001 L CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20001984g.pdf" H 2350 5950 50  0001 C CNN
+	1    2500 6000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1450 5400 2500 5400
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R18
+U 1 1 5D59B8AB
+P 1950 6100
+F 0 "R18" H 2020 6146 50  0000 L CNN
+F 1 "6.8k" H 2020 6055 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 1880 6100 50  0001 C CNN
+F 3 "~" H 1950 6100 50  0001 C CNN
+	1    1950 6100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1800 6100 1650 6100
+$Comp
+L uECG_rev4-rescue:LED-Device-3CG_V1.0-rescue D4
+U 1 1 5D5AF5EF
+P 3000 5550
+F 0 "D4" V 3038 5433 50  0000 R CNN
+F 1 "LED" V 2947 5433 50  0000 R CNN
+F 2 "LED_SMD:LED_0402_1005Metric" H 3000 5550 50  0001 C CNN
+F 3 "~" H 3000 5550 50  0001 C CNN
+	1    3000 5550
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2500 5400 2600 5400
+Connection ~ 2500 5400
+Wire Wire Line
+	2900 5400 3000 5400
+Wire Wire Line
+	3000 5700 3000 6100
+Wire Wire Line
+	3000 6100 2900 6100
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R16
+U 1 1 5D5E7A03
+P 2750 5400
+F 0 "R16" H 2820 5446 50  0000 L CNN
+F 1 "2k" H 2820 5355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 2680 5400 50  0001 C CNN
+F 3 "~" H 2750 5400 50  0001 C CNN
+	1    2750 5400
+	0    1    1    0   
+$EndComp
+$Comp
+L Diode:BAV99 D3
+U 2 1 5D5FBB11
+P 1700 3200
+F 0 "D3" V 1654 3278 50  0000 L CNN
+F 1 "BAV99" V 1745 3278 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 1700 3050 50  0001 C CNN
+F 3 "www.nxp.com/documents/data_sheet/BAV99_SER.pdf" H 1700 3300 50  0001 C CNN
+	2    1700 3200
+	0    1    1    0   
+$EndComp
+$Comp
+L Diode:BAV99 D3
+U 1 1 5D60143B
+P 1150 3200
+F 0 "D3" V 1196 3112 50  0000 R CNN
+F 1 "BAV99" V 1105 3112 50  0000 R CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 1150 3050 50  0001 C CNN
+F 3 "www.nxp.com/documents/data_sheet/BAV99_SER.pdf" H 1150 3300 50  0001 C CNN
+	1    1150 3200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDS-power-3CG_V1.0-rescue #PWR030
+U 1 1 5D649629
+P 1450 3350
+F 0 "#PWR030" H 1450 3100 50  0001 C CNN
+F 1 "GNDS" H 1455 3177 50  0000 C CNN
+F 2 "" H 1450 3350 50  0001 C CNN
+F 3 "" H 1450 3350 50  0001 C CNN
+	1    1450 3350
+	1    0    0    -1  
+$EndComp
+Connection ~ 1450 3350
+Text GLabel 2850 1550 2    50   Input ~ 0
+IN2
+Text GLabel 1450 3050 1    50   Input ~ 0
+IN2
+Wire Wire Line
+	1400 2450 1400 2500
+Wire Wire Line
+	1500 2150 1400 2150
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R11
+U 1 1 5D4DC16B
+P 3050 2500
+F 0 "R11" H 2980 2454 50  0000 R CNN
+F 1 "10М" H 2980 2545 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 2980 2500 50  0001 C CNN
+F 3 "~" H 3050 2500 50  0001 C CNN
+	1    3050 2500
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R12
+U 1 1 5D4DBD52
+P 2750 2500
+F 0 "R12" H 2680 2454 50  0000 R CNN
+F 1 "10М" H 2680 2545 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 2680 2500 50  0001 C CNN
+F 3 "~" H 2750 2500 50  0001 C CNN
+	1    2750 2500
+	0    1    1    0   
+$EndComp
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R13
+U 1 1 5D029351
+P 2450 2500
+F 0 "R13" H 2380 2454 50  0000 R CNN
+F 1 "10М" H 2380 2545 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 2380 2500 50  0001 C CNN
+F 3 "~" H 2450 2500 50  0001 C CNN
+	1    2450 2500
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2500 1900 2850 1900
+$Comp
+L uECG_rev4-rescue:R-Device-3CG_V1.0-rescue R14
+U 1 1 5CCFAC77
+P 2150 2500
+F 0 "R14" H 2080 2454 50  0000 R CNN
+F 1 "10М" H 2080 2545 50  0000 R CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 2080 2500 50  0001 C CNN
+F 3 "~" H 2150 2500 50  0001 C CNN
+	1    2150 2500
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3200 2500 3200 2250
+Wire Wire Line
+	3200 2250 2850 2250
+Wire Wire Line
+	2850 2250 2850 1900
+Connection ~ 2850 1900
+Wire Wire Line
+	1150 3050 1700 3050
+Wire Wire Line
+	1450 3350 1700 3350
+Wire Wire Line
+	1150 3350 1450 3350
+$Comp
+L ultimate_library:GND_CONN GC1
+U 1 1 5D70C0AE
+P 3450 3000
+F 0 "GC1" H 3450 3125 50  0000 C CNN
+F 1 "GND_CONN" H 3450 3034 50  0000 C CNN
+F 2 "ultimate_library:GND_CONN" H 3450 3000 50  0001 C CNN
+F 3 "" H 3450 3000 50  0001 C CNN
+	1    3450 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GNDA-power-3CG_V1.0-rescue #PWR068
+U 1 1 5D711564
+P 3650 3200
+F 0 "#PWR068" H 3650 2950 50  0001 C CNN
+F 1 "GNDA" H 3655 3027 50  0000 C CNN
+F 2 "" H 3650 3200 50  0001 C CNN
+F 3 "" H 3650 3200 50  0001 C CNN
+	1    3650 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L uECG_rev4-rescue:GND-power-3CG_V1.0-rescue #PWR06
+U 1 1 5D71504C
+P 3250 3200
+F 0 "#PWR06" H 3250 2950 50  0001 C CNN
+F 1 "GND" H 3172 3163 50  0000 R CNN
+F 2 "" H 3250 3200 50  0001 C CNN
+F 3 "" H 3250 3200 50  0001 C CNN
+	1    3250 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L ultimate_library:SWD_CONN SC1
+U 1 1 5D787CDB
+P 10250 5450
+F 0 "SC1" H 10187 5825 50  0000 C CNN
+F 1 "SWD_CONN" H 10187 5734 50  0000 C CNN
+F 2 "ultimate_library:SWD_CONNECTOR" H 10250 5450 50  0001 C CNN
+F 3 "" H 10250 5450 50  0001 C CNN
+	1    10250 5450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3250 3100 3250 3200
+Wire Wire Line
+	3650 3100 3650 3200
+$Comp
+L Device:Fuse_Small F1
+U 1 1 5D7BABA5
+P 3200 6550
+F 0 "F1" H 3200 6735 50  0000 C CNN
+F 1 "Fuse_Small" H 3200 6644 50  0000 C CNN
+F 2 "Fuse:Fuse_0603_1608Metric" H 3200 6550 50  0001 C CNN
+F 3 "~" H 3200 6550 50  0001 C CNN
+	1    3200 6550
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
