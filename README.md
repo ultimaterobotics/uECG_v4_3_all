@@ -7,6 +7,7 @@ Project is in active development stage, at the current moment we have shared:
  * schematics and PCB design
  * ECG monitor program for Linux (not properly cleaned/commented yet)
  * Firmware for the main unit (more or less clean but not commented yet)
+ * Firmware for the base unit (more or less clean but not commented yet)
 
 we are cleaning and commenting firmware and Android app code and will share them when ready.
 You can follow the project on Hackaday: https://hackaday.io/project/164486-uecg-a-very-small-wearable-ecg
