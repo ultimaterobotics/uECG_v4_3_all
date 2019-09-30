@@ -13,13 +13,15 @@ We work in Ubuntu 18.04, although this should work with most Linux versions. We 
 ## Build process configuration
 1. In Nodric SDK you need to write path to arm-none-eabi compiler tools, it is located in file components/toolchain/gcc/Makefile.posix
 Its content should be following for given compiler version:
-GNU_INSTALL_ROOT := /home/<your user folder>/<path to uncompressed compiler folder>/gcc-arm-none-eabi-8-2018-q4-major/bin/
+```
+GNU_INSTALL_ROOT := ~/<path to uncompressed compiler folder>/gcc-arm-none-eabi-8-2018-q4-major/bin/
 GNU_VERSION := 8.2.1
 GNU_PREFIX := arm-none-eabi
+```
 (if you use a different version, adjust folder name and version code accordingly)
 
 2. After that, inside project folder, you need to adjust SDK path in makefile. Open project Makefile and put correct path in this line:
-SDK_ROOT := /home/<your user folder>/<path to Nordic SDK>/nRF5_SDK_14.1.0_1dda907
+`SDK_ROOT := ~/< path to Nordic SDK >/nRF5_SDK_14.1.0_1dda907`
 (adjust SDK folder name accordingly if your version is different)
 
 That’s it for build config. Now you need to run
@@ -29,7 +31,8 @@ in project folder and it should produce compiled .hex file.
 ## Upload process configuration
 Download openocd. Unpack it to some folder (for this document we assume it is located in ~/openocd) and in the terminal, enter the following:
 
-```sudo apt-get install make libtool pkg-config autoconf automake texinfo libusb-1.0-0-dev
+```
+sudo apt-get install make libtool pkg-config autoconf automake texinfo libusb-1.0-0-dev
 cd ~/openocd
 ./configure --enable-stlink
 make
@@ -41,7 +44,8 @@ Connect the device to the programmer. Pins on uECG have text labels, check pinou
 
 In the project folder (it’s important!) execute openocd command:
 
-```cd ~/<your-project-folder>
+```
+cd ~/< your-project-folder >
 openocd -f interface/stlink.cfg -f target/nrf52.cfg
 ```
 
@@ -51,7 +55,8 @@ If everything’s ok, command will not return to the shell, so open a new termin
 
 This will establish connection to OpenOCD via telnet. In telnet prompt type:
 
-```halt
+```
+halt
 nrf5 mass_erase
 reset
 halt
