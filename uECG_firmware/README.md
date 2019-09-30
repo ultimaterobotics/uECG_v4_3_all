@@ -5,10 +5,10 @@
 We work in Ubuntu 18.04, although this should work with most Linux versions. We have no idea how to do this on Windows, sorry :)
 
 ## Prerequisites
-   [Nordic SDK version 14.1](https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.1.0_1dda907.zip) (both older and newer versions won’t work without config modification, although functionally it should be compatible with any version at all - we use only very basic SDK functions, no soft device)
-   [Arm-none-eabi compiler version 8-2018-q4-major or higher](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
-   [OpenOCD](https://sourceforge.net/projects/openocd/files/openocd/0.10.0/) version 0.10.0 or higher 
-   STLink programmer (any clone should work just fine)
+* [Nordic SDK version 14.1](https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.1.0_1dda907.zip) (both older and newer versions won’t work without config modification, although functionally it should be compatible with any version at all - we use only very basic SDK functions, no soft device)
+* [Arm-none-eabi compiler version 8-2018-q4-major or higher](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
+* [OpenOCD](https://sourceforge.net/projects/openocd/files/openocd/0.10.0/) version 0.10.0 or higher
+* STLink programmer (any clone should work just fine)
 
 ## Build process configuration
 1. In Nodric SDK you need to write path to arm-none-eabi compiler tools, it is located in file components/toolchain/gcc/Makefile.posix
