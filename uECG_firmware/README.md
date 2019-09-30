@@ -29,19 +29,19 @@ in project folder and it should produce compiled .hex file.
 # Upload process configuration
 Download openocd. Unpack it to some folder (for this document we assume it is located in ~/openocd) and in the terminal, enter the following:
 
-`sudo apt-get install make libtool pkg-config autoconf automake texinfo libusb-1.0-0-dev
-cd ~/openocd
-./configure --enable-stlink
-make
-sudo make install`
+`sudo apt-get install make libtool pkg-config autoconf automake texinfo libusb-1.0-0-dev`
+`cd ~/openocd`
+`./configure --enable-stlink`
+`make`
+`sudo make install`
 
 # Uploading firmware
 Connect the device to the programmer. Pins on uECG have text labels, check pinout of your particular STLink programmer for proper connections.
 
 In the project folder (it’s important!) execute openocd command:
 
-`cd ~/<your-project-folder>
-openocd -f interface/stlink.cfg -f target/nrf52.cfg`
+`cd ~/<your-project-folder>`
+`openocd -f interface/stlink.cfg -f target/nrf52.cfg`
 
 If everything’s ok, command will not return to the shell, so open a new terminal window and enter:
 
@@ -49,11 +49,11 @@ If everything’s ok, command will not return to the shell, so open a new termin
 
 This will establish connection to OpenOCD via telnet. In telnet prompt type:
 
-`halt
-nrf5 mass_erase
-reset
-halt
-flash write_image erase _build/nrf52832_xxaa.hex`  (put relative path and name of .hex file)
+`halt`
+`nrf5 mass_erase`
+`reset`
+`halt`
+`flash write_image erase _build/nrf52832_xxaa.hex`  (put relative path and name of .hex file)
 `reset`
 
 And that should be it!
