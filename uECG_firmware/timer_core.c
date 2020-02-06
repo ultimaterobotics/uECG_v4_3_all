@@ -61,33 +61,33 @@ uint32_t seconds()
 {
 	return s_time;
 }
-/* conflicts with mcp clock due to timer1
+
 void (*timed_event)(void) = 0;
 
-void schedule_event(uint32_t mcs_dt, void (*tm_event)(void))
+void schedule_event(uint32_t steps_dt, void (*tm_event)(void))
 {
 	timed_event = tm_event;
 
-	NRF_TIMER1->TASKS_CLEAR = 1;
+	NRF_TIMER3->TASKS_CLEAR = 1;
 
-	NRF_TIMER1->MODE = TIMER_MODE_MODE_Timer;
-	NRF_TIMER1->BITMODE = 3;
-	NRF_TIMER1->PRESCALER = 4; //3 - 0.5 uS step, 4 - 1 uS step
-	NRF_TIMER1->CC[0] = mcs_dt;
+	NRF_TIMER3->MODE = TIMER_MODE_MODE_Timer;
+	NRF_TIMER3->BITMODE = 3; //32 bits
+	NRF_TIMER3->PRESCALER = 0; //16 steps per uS
+	NRF_TIMER3->CC[0] = steps_dt;
 
-	NRF_TIMER1->INTENSET = (TIMER_INTENSET_COMPARE0_Enabled << TIMER_INTENSET_COMPARE0_Pos); 
-	NRF_TIMER1->SHORTS = 1<<8; //compare->stop
-	NVIC_EnableIRQ(TIMER1_IRQn);
-	NRF_TIMER1->TASKS_START = 1;
+	NRF_TIMER3->INTENSET = (TIMER_INTENSET_COMPARE0_Enabled << TIMER_INTENSET_COMPARE0_Pos); 
+	NRF_TIMER3->SHORTS = 1<<8; //compare->stop
+	NVIC_EnableIRQ(TIMER3_IRQn);
+	NRF_TIMER3->TASKS_START = 1;
 }
 
-void TIMER1_IRQHandler(void)
+void TIMER3_IRQHandler(void)
 {
-	NRF_TIMER1->EVENTS_COMPARE[0] = 0;
+	NRF_TIMER3->EVENTS_COMPARE[0] = 0;
+	NRF_TIMER3->TASKS_STOP = 1;
 	timed_event();
-	nrf_gpio_pin_toggle(24);
 }
-*/
+
 void TIMER2_IRQHandler(void)
 {
 	NRF_TIMER2->EVENTS_COMPARE[0] = 0;

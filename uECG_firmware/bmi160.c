@@ -135,6 +135,7 @@ uint8_t bmi160_get_status()
 {
 	return bmi_read_reg8(0x00);
 }
+
 uint8_t bmi160_read()
 {
 	NVIC_DisableIRQ(GPIOTE_IRQn);
@@ -169,6 +170,14 @@ uint8_t bmi160_read()
 	bmi.data_id++;
 	return 1;
 }
+
+void bmi160_read_steps()
+{
+	uint16_t step_cnt;
+	bmi_read_buf(BMI_STEP_CNT, 2, &step_cnt);
+	bmi.step_cnt = step_cnt;
+}
+
 
 void bmi160_stop()
 {
@@ -213,6 +222,11 @@ void bmi160_normal_mode()
 	delay_ms(1);
 	bmi_write_reg8(BMI_GYR_RANGE, 0b00000010); //+-500 dps
 	delay_ms(1);
+	bmi_write_reg8(BMI_STEP_CONF, 0b00010101); //steps
+	delay_ms(1);
+	bmi_write_reg8(BMI_STEP_CONF+1, 0b00001011); //steps
+	delay_ms(1);
+
 	bmi_write_reg8(BMI_INT_EN+1, 1<<4); //drdy interrupt
 	bmi_write_reg8(BMI_INT_OUT_CTRL, 0b00001010); //int 1 enabled, active high
 	bmi_write_reg8(BMI_INT_MAP+1, 1<<7); //drdy on int1
@@ -245,6 +259,8 @@ void bmi160_acc_mode()
 	delay_ms(100);
 	bmi_write_reg8(BMI_CMD, 0b00010100); //set gyro power mode - off 00
 	delay_ms(100);
+	bmi_write_reg8(BMI_CMD, 0b00010001); //set acc power mode - normal 01
+	delay_ms(100);
 
 	bmi_write_reg8(BMI_FIFO_DOWNS, 0);
 	bmi_write_reg8(BMI_FIFO_CONF+1, 0); //turn off
@@ -263,6 +279,10 @@ void bmi160_acc_mode()
 	bmi_write_reg8(BMI_INT_MAP+1, 1<<7); //drdy on int1
 //	bmi_write_reg8(BMI_INT_LATCH, 0b1000); //40 ms latch
 	bmi_write_reg8(BMI_INT_LATCH, 0); //no latch
+
+	bmi_write_reg8(BMI_STEP_CONF, 0b00010101); //steps
+	bmi_write_reg8(BMI_STEP_CONF+1, 0b00001011); //steps
+	
 }
 
 void bmi160_init(uint8_t pin_MISO, uint8_t pin_MOSI, uint8_t pin_SCK, uint8_t pin_CS, uint8_t pin_INT)
@@ -285,3 +305,10 @@ void bmi160_init(uint8_t pin_MISO, uint8_t pin_MOSI, uint8_t pin_SCK, uint8_t pi
 	bmi160_acc_mode();
 }
 
+int bmi160_is_ok()
+{
+	uint8_t who_am_i = bmi_read_reg8(0);
+	if(who_am_i == 0b11010001)
+		return 1;
+	return 0;
+}

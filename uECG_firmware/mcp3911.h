@@ -17,8 +17,8 @@ typedef struct {
     union {
         uint8_t reg;
         struct {
-            unsigned PGA_CH1 : 3;
             unsigned PGA_CH0 : 3;
+            unsigned PGA_CH1 : 3;
             unsigned BOOST : 2;
         };
     };
@@ -74,9 +74,10 @@ typedef struct sMCP3911
 sMCP3911 mcp;
 
 void init_mcp3911(uint8_t pin_MISO, uint8_t pin_MOSI, uint8_t pin_SCK, uint8_t pin_CS, uint8_t pin_INT);
+int mcp3911_is_ok();
 void mcp3911_update_config();
 uint8_t mcp3911_read();
-void mcp3911_stop();
+void mcp3911_turnoff();
 void set_skin_pin(uint8_t pin);
 void set_skin_onoff(uint8_t is_on);
 int mcp_get_filtered_value();

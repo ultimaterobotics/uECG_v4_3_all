@@ -14,7 +14,7 @@ void start_leds_timer()
 	NRF_TIMER4->CC[0] = 15000; //r
 	NRF_TIMER4->CC[1] = 80; //g
 	NRF_TIMER4->CC[2] = 10; //b
-	NRF_TIMER4->CC[3] = 11110; //driver
+	NRF_TIMER4->CC[3] = 21110; //driver, not used with timer anymore
 	NRF_TIMER4->CC[4] = 16384;
 	NRF_TIMER4->SHORTS = 0b10000; //clear on compare 4
 
@@ -29,13 +29,11 @@ void TIMER4_IRQHandler(void)
 	if(NRF_TIMER4->EVENTS_COMPARE[4])
 	{
 		NRF_TIMER4->EVENTS_COMPARE[4] = 0;
-		NRF_GPIO->OUTSET = led_driver_mask;
 		NRF_GPIO->OUTCLR = led_pin_mask[0] | led_pin_mask[1] | led_pin_mask[2];//led_set_mask;
 	}
 	if(NRF_TIMER4->EVENTS_COMPARE[3])
 	{
 		NRF_TIMER4->EVENTS_COMPARE[3] = 0;
-		NRF_GPIO->OUTCLR = led_driver_mask;
 	}
 	if(NRF_TIMER4->EVENTS_COMPARE[2])
 	{
@@ -63,6 +61,7 @@ void leds_init()
 	led_driver = 19;
 	led_driver_mask = 1<<led_driver;
 	NRF_GPIO->DIRSET = led_driver_mask;
+	NRF_GPIO->OUTCLR = led_driver_mask;
 	
 	for(int x = 0; x < 3; x++)
 	{
@@ -87,8 +86,12 @@ int val_to_cc(int val)
 
 void leds_set_driver(int val)
 {
-	NRF_TIMER4->CC[3] = val_to_cc(val);
+	if(val)
+		NRF_GPIO->OUTSET = led_driver_mask;
+	else
+		NRF_GPIO->OUTCLR = led_driver_mask;
 }
+
 void leds_set(int r, int g, int b)
 {
 //	NRF_TIMER4->CC[0] = 16380;

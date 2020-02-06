@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="uECG" Version="10.0.0" InternalType="">
+<CodeLite_Project Name="uECG_v4" Version="10.0.0" InternalType="">
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="Src">
@@ -89,14 +89,16 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
-        <RebuildCommand/>
+        <RebuildCommand>make clean
+make</RebuildCommand>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make</BuildCommand>
+        <BuildCommand>make
+</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory>/home/the_3d6/robotics/nrf5/nrf52_proj/3CG</WorkingDirectory>
+        <WorkingDirectory>/home/the_3d6/robotics/nrf5/nrf52_proj/uECG_v4</WorkingDirectory>
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild/>

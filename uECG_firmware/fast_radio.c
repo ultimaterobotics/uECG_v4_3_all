@@ -6,8 +6,8 @@
 #define PACKET0_S0_SIZE             (1UL)  //!< S0 size in bytes
 #define PACKET0_PAYLOAD_SIZE        (8UL)  //!< payload size in bits
 #define PACKET1_BASE_ADDRESS_LENGTH (4UL)  //!< base address length in bytes
-uint32_t pack_max_length = 32;  //!< static length in bytes
-uint32_t pack_payload = 32;  //!< payload size in bytes
+uint32_t pack_max_length = 64;  //!< static length in bytes
+uint32_t pack_payload = 64;  //!< payload size in bytes
 
 uint32_t rx_packet_counter = 0;
 uint32_t last_processed_rx_packet = 0;
@@ -43,8 +43,8 @@ void fr_init(int packet_length)
     NRF_RADIO->TXPOWER   = (RADIO_TXPOWER_TXPOWER_Pos4dBm << RADIO_TXPOWER_TXPOWER_Pos);
     NRF_RADIO->FREQUENCY = 21UL; 
 //    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_2Mbit << RADIO_MODE_MODE_Pos);
-    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_1Mbit << RADIO_MODE_MODE_Pos);
-//    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_250Kbit << RADIO_MODE_MODE_Pos);
+//    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_1Mbit << RADIO_MODE_MODE_Pos);
+    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_250Kbit << RADIO_MODE_MODE_Pos);
 
     // Radio address config
     NRF_RADIO->PREFIX0     = 0x44332211UL;  // Prefix byte of addresses 3 to 0

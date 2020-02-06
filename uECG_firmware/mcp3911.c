@@ -310,7 +310,7 @@ void stop_mcp_clock()
 
 volatile uint8_t mcp_has_new_data = 0;
 uint32_t skin_pin_mask = 0;
-uint8_t skin_measuring = 0;
+uint8_t skin_measuring = 1;
 
 int filtered_value = 0;
 float filtered_skin = 0;
@@ -359,7 +359,7 @@ float *get_cur_fft_buf(int real_im) //0 real 1 im
 	{
 		if(real_im == 0) return fft_buf1_r;
 		else return fft_buf1_i;
-	}
+	} 
 	else
 	{
 		if(real_im == 0) return fft_buf2_r;
@@ -557,24 +557,6 @@ void mcp_set_filter_mode(int use_filter)
 	filter_mode = use_filter;
 }
 
-void set_skin_pin(uint8_t pin)
-{
-	nrf_gpio_cfg_output(pin);
-	skin_pin_mask = 1<<pin;
-}
-void set_skin_onoff(uint8_t is_on)
-{
-	if(is_on)
-	{
-		NRF_GPIO->OUTCLR = skin_pin_mask;
-		skin_measuring = 1;
-	}
-	else
-	{
-		NRF_GPIO->OUTSET = skin_pin_mask;
-		skin_measuring = 0;
-	}
-}
 
 void GPIOTE_IRQHandler(void)
 {
@@ -587,6 +569,8 @@ void GPIOTE_IRQHandler(void)
 			mcp_has_new_data = 1;
 	}
 }
+
+int init_ok = 0;
 
 void init_mcp3911(uint8_t pin_MISO, uint8_t pin_MOSI, uint8_t pin_SCK, uint8_t pin_CS, uint8_t pin_INT)
 {
@@ -618,7 +602,8 @@ void init_mcp3911(uint8_t pin_MISO, uint8_t pin_MOSI, uint8_t pin_SCK, uint8_t p
 //	conf_reg.EN_OFFCAL = 0;
 	conf_reg.OSR = mcp.osr;
 	conf_reg.PRE = mcp.amclk_prescaler; // 0b11 = 8, 0b10 = 4, 0b01 = 2, 0 = 1
-
+	conf_reg.SHUTDOWN = 0;
+	conf_reg.VREFEXT = 0;
 
 //  statcom_reg.WIDTH_DATA = 0b10; //32 bits
 //	statcom_reg.WIDTH = 0b11; //24 bits
@@ -636,7 +621,12 @@ void init_mcp3911(uint8_t pin_MISO, uint8_t pin_MOSI, uint8_t pin_SCK, uint8_t p
 	mcp3911_write_reg8(MCP3911_GAIN, gain_reg.reg);	
 	mcp3911_write_reg16(MCP3911_STATCOM, statcom_reg.reg);	
 	mcp3911_write_reg16(MCP3911_CONFIG, conf_reg.reg);
-
+	
+	uint16_t conf_reg_val = mcp3911_read_reg16(MCP3911_CONFIG);
+	if(conf_reg_val == conf_reg.reg)
+	{
+		init_ok = 1;
+	}
 	start_mcp_clock();
 	
 	return;
@@ -716,3 +706,24 @@ uint8_t mcp3911_read()
 }
 
 
+int mcp3911_is_ok()
+{
+	return init_ok;
+}
+
+void mcp3911_turnoff()
+{
+	NVIC_DisableIRQ(GPIOTE_IRQn);
+
+	gain_reg.PGA_CH0 = 0;
+	gain_reg.PGA_CH1 = 0;
+	gain_reg.BOOST = 0;
+	mcp3911_write_reg8(MCP3911_GAIN, gain_reg.reg);	
+	
+	conf_reg.reg = 0;
+	conf_reg.SHUTDOWN = 0b11;
+	conf_reg.VREFEXT = 1;
+	conf_reg.CLKEXT = 1;
+	mcp3911_write_reg16(MCP3911_CONFIG, conf_reg.reg);
+	stop_mcp_clock();
+}

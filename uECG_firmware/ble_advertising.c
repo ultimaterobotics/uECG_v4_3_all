@@ -1,8 +1,10 @@
 #include "ble_advertising.h"
 #include "nrf.h"
 #include "timer_core.h"
+#include "leds.h"
 
 uint8_t packet[128];
+uint8_t scan_resp_packet[128];
 uint8_t mac_addr[6] = {0xBA, 0xBE, 0x00, 0x00, 0x00, 0x88};
 int pack_len = 0; //not including first 2 bytes - header and length 
 int cur_channel = 37;
@@ -15,6 +17,9 @@ uint8_t rx_packet2[64];
 // [2..7] - MAC
 // [8...38] - AD data: 8 - AD type, 9 - AD data length, 10+ data
 
+int send_out_type = 0;
+int send_out_cnt = 0;
+
 void prepare_adv_packet(uint8_t *payload, int payload_len)
 {
 //	cur_channel++;
@@ -22,7 +27,16 @@ void prepare_adv_packet(uint8_t *payload, int payload_len)
 
 	pack_len = 37;//21 + 16;//payload_len; //??? should it be?
 	int ppos = 0;
-	packet[ppos++] = 0b00100010;// 0x42;//advertising, not accepting connections
+	send_out_cnt++;
+	send_out_type = 0;
+	if(send_out_cnt > 20)// || millis() < 30000)
+	{
+		send_out_type = 1;
+//		if(send_out_cnt > 10)
+			send_out_cnt = 0;
+	}
+	packet[ppos++] = 0b01000010;
+
 	packet[ppos++] = pack_len;
 
 	packet[ppos++] = 0; //S0, S1, length
@@ -35,18 +49,74 @@ void prepare_adv_packet(uint8_t *payload, int payload_len)
 	for(int x = 0; x < 6; x++)
 		packet[ppos++] = mac_addr[5-x];
 
-	packet[ppos++] = 5;
-	packet[ppos++] = 0x08;
-	packet[ppos++] = 'u';
-	packet[ppos++] = 'E';
-	packet[ppos++] = 'C';
-	packet[ppos++] = 'G';
+	if(0)if(send_out_type)
+	{
+		packet[ppos++] = 2;
+		packet[ppos++] = 0x01;
+		packet[ppos++] = 0b00101;
+		packet[ppos++] = 7;
+		packet[ppos++] = 0x07;
+		packet[ppos++] = mac_addr[0];
+		packet[ppos++] = mac_addr[2];
+		packet[ppos++] = mac_addr[1];
+		packet[ppos++] = mac_addr[4];
+		packet[ppos++] = mac_addr[3];
+		packet[ppos++] = mac_addr[5];
+		packet[1] = 2+6+3+8;
+//		packet[ppos++] = 0b00101;
+		return;
+	}
+	if(send_out_type)
+	{
+		packet[ppos++] = 2; //flags
+		packet[ppos++] = 0x01;
+		packet[ppos++] = 0b0;
+		
+		packet[ppos++] = 5; //short name
+		packet[ppos++] = 0x08;
+		packet[ppos++] = 'u';
+		packet[ppos++] = 'E';
+		packet[ppos++] = 'C';
+		packet[ppos++] = 'G';
+		
+//		packet[ppos++] = ; //connection intervals
+//		packet[ppos++] = 0x00;
+//		packet[ppos++] = 0x06;
+//		packet[ppos++] = 0x00;
+//		packet[ppos++] = 0x09;
+	}
 
-	packet[ppos++] = 44;// payload_len-2;
+	packet[ppos++] = pack_len-6-2+1-9*send_out_type;// payload_len-2;
+	packet[ppos++] = 0xFF;
 		 
 	for(int x = 0; x < payload_len; x++)
+	{
 		packet[ppos++] = payload[x];
+		if(ppos >= 39) break;
+	}
 
+	packet[39] = 0;
+	packet[40] = 0;
+	ppos = 0;
+	scan_resp_packet[ppos++] = 0b01000100;// scan response
+	scan_resp_packet[ppos++] = 6;
+
+	scan_resp_packet[ppos++] = 0; //S0, S1, length
+
+	for(int x = 0; x < 6; x++)
+		scan_resp_packet[ppos++] = mac_addr[5-x];
+
+
+	for(int x = 0; x < 6; x++)
+		scan_resp_packet[ppos++] = 0;
+
+//	scan_resp_packet[ppos++] = 5;
+//	scan_resp_packet[ppos++] = 0x08;
+//	scan_resp_packet[ppos++] = 'u';
+//	scan_resp_packet[ppos++] = 'E';
+//	scan_resp_packet[ppos++] = 'C';
+//	scan_resp_packet[ppos++] = 'G';
+//	scan_resp_packet[ppos++] = 0;
 }
 
 
@@ -124,9 +194,9 @@ void config_ble_adv()
 //                        (RADIO_MODECNF0_RU_Fast << RADIO_MODECNF0_RU_Pos);
                         
 	// 4dBm output power
-	NRF_RADIO->TXPOWER = RADIO_TXPOWER_TXPOWER_0dBm << RADIO_TXPOWER_TXPOWER_Pos;
+	NRF_RADIO->TXPOWER = 0x04;// 0x04 max RADIO_TXPOWER_TXPOWER_0dBm << RADIO_TXPOWER_TXPOWER_Pos;
 	NRF_RADIO->EVENTS_DISABLED = 0;
-	NRF_RADIO->EVENTS_END = 0;
+	NRF_RADIO->EVENTS_END = 0; 
 	NRF_RADIO->EVENTS_READY = 0;
 	NRF_RADIO->EVENTS_ADDRESS = 0;	
 	
@@ -169,6 +239,8 @@ void send_adv_packet()
 		NRF_RADIO->FREQUENCY = 80;// << RADIO_FREQUENCY_FREQUENCY_Pos; //ch39
 
 	NRF_RADIO->DATAWHITEIV = cur_channel;
+	NRF_RADIO->CRCPOLY = 0x00065B;
+	NRF_RADIO->CRCINIT = 0x555555;
 
 	// Configure address of the packet and logic address to use
 	NRF_RADIO->PACKETPTR = (uint32_t)packet;//&packet[0];
@@ -181,8 +253,8 @@ void send_adv_packet()
 
 	NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk;
 	NRF_RADIO->TASKS_TXEN = 1;
-//	for(int x = 0; x < 20; x++) ; //to make sure radio enters TXEN sequence before enabling DISABLED_RXEN shortcut
-//	NRF_RADIO->SHORTS |= RADIO_SHORTS_DISABLED_RXEN_Msk;
+	for(int x = 0; x < 20; x++) ; //to make sure radio enters TXEN sequence before enabling DISABLED_RXEN shortcut
+	NRF_RADIO->SHORTS |= RADIO_SHORTS_DISABLED_RXEN_Msk;
 	ble_mode = 3;
 	return;
 }
@@ -193,6 +265,30 @@ uint32_t last_end_event_time2 = 0;
 
 uint8_t rx_packet2[64];
 
+void send_scan_response()
+{
+	NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk;
+
+	for(int x = 0; x < 6; x++)
+		scan_resp_packet[3+6+x] = 0;//rx_packet2[3+x];
+	
+	NRF_RADIO->DATAWHITEIV = cur_channel;
+
+	// Configure address of the packet and logic address to use
+	NRF_RADIO->PACKETPTR = (uint32_t)scan_resp_packet;//&packet[0];
+	NRF_RADIO->TASKS_TXEN = 1;
+
+//	if(!(NRF_RADIO->STATE & 0b01000)) fr_disable_ble(); //non-tx state
+//	else if(!(NRF_RADIO->STATE & 0b011)) fr_disable_ble(); //states 9, 10, 11 responsible for TX
+
+	for(int x = 0; x < 20; x++) ; //to make sure radio enters TXEN sequence before enabling DISABLED_RXEN shortcut
+	NRF_RADIO->SHORTS |= RADIO_SHORTS_DISABLED_RXEN_Msk;
+	ble_mode = 3;
+//	leds_set(0, 0, 0);
+	return;
+	
+}
+
 void ble_irq_handler()
 {
 //			NRF_GPIO->OUTSET = (1<<28);
@@ -200,17 +296,39 @@ void ble_irq_handler()
 	if(NRF_RADIO->EVENTS_END && (NRF_RADIO->INTENSET & RADIO_INTENSET_END_Msk))
 	{
 		NRF_RADIO->EVENTS_END = 0;
-		last_end_event_time2 = millis();
+//		last_end_event_time2 = millis();
 		if(ble_mode == 0) //got connection in RX mode
 		{
 			rx_packet_counter2++;
+			int pack_type = rx_packet2[0] & 0x0F;
+			if(pack_type == 0b0011)
+			{
+				int is_good = 1;
+				for(int n = 0; n < 6; n++)
+					if(rx_packet2[9+n] != mac_addr[5-n])
+						is_good = 0;
+				
+				if(is_good)
+				{
+//					schedule_event(16*150/8, send_scan_response);
+					
+					send_scan_response();
+//					leds_set(0, 0, 255);
+					return;
+				}
+//				else
+//					leds_set(255, 0, 0);
+			}
+//			else
+//				leds_set(((pack_type&0b0100)>0)*255, ((pack_type&0b0010)>0)*255, ((pack_type&0b0001)>0)*255);
 		}
 		if(ble_mode == 3) //tx event ended, switched to rx using shorts
 		{
 			NRF_RADIO->PACKETPTR = (uint32_t)rx_packet2;
-			NRF_RADIO->EVENTS_DISABLED = 0U;    
-			NRF_RADIO->TASKS_DISABLE   = 1U; // Disable the radio - don't want RX
+//			NRF_RADIO->EVENTS_DISABLED = 0U;    
+//			NRF_RADIO->TASKS_DISABLE   = 1U; // Disable the radio - don't want RX
 			ble_mode = 0;
+			NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk;
 //			uart_send(rx_packet2, 64);
 		}
 	}
