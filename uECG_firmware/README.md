@@ -37,10 +37,10 @@ sudo apt install openocd
 
 Connect the device to the programmer. Pins on uECG have text labels, check pinout of your particular STLink programmer for proper connections.
 
-In the project folder (it’s important!) execute openocd command:
+In the folder with .hex file execute openocd command:
 
 ```
-cd ~/< your-project-folder >
+cd ~/< hex-file-folder >
 openocd -f interface/stlink.cfg -f target/nrf52.cfg
 ```
 
@@ -55,7 +55,7 @@ halt
 nrf5 mass_erase
 reset
 halt
-flash write_image erase _build/uECG_vxxx.hex  (put relative path and name of .hex file)
+flash write_image erase uECG_vxxx.hex  (put correct name of .hex file)
 reset
 ```
 
