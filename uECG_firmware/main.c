@@ -1241,7 +1241,7 @@ int main(void)
 				{
 					volatile int rnd = NRF_RNG->VALUE;
 					NRF_RNG->EVENTS_VALRDY = 0;
-					ble_dt1 = 5 + (rnd%4);
+					ble_dt1 = 11 + (rnd%4);
 					ble_dt2 = 5 + ((rnd*17)%5);
 					dbg_val = ble_dt1;
 					NRF_RNG->TASKS_START;
