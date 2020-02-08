@@ -2,6 +2,8 @@
 #include "serial_functions.h"
 #include "drawing.h"
 
+#include "packet_parser.h"
+
 #include <sys/time.h>
 #include <fcntl.h>
 
@@ -18,6 +20,16 @@
 SFFTools ft;
 
 struct timeval bpm_time;
+
+float bmi_ax;
+float bmi_ay;
+float bmi_az;
+int bmi_steps;
+
+float device_get_ax(){return bmi_ax;}
+float device_get_ay(){return bmi_ay;}
+float device_get_az(){return bmi_az;}
+int device_get_steps(){return bmi_steps;}
 
 uint8_t *response_buf;
 int response_pos = 0;
@@ -64,6 +76,7 @@ uint8_t last_pack_id = 0;
 int err_conseq = 0;
 
 int save_file = -1;
+int save_file_RR = -1;
 int save_file_skin = -1;
 int save_turned_on = 0;
 
@@ -243,32 +256,27 @@ void device_close_log_file()
 	if(save_file > 0)
 	{
 		close(save_file);
+		close(save_file_RR);
 		close(save_file_skin);
 		save_file_skin = -1;
 		save_file = -1;
+		save_file_RR = -1;
 	}
 }
 
 long last_bpm_out_sec = 0;
 int last_skin_v = 0;
 
-
 typedef struct sdevice_data
 {
-	uint8_t mac[6];
-	uint32_t id;
-	uint8_t ver;
-	uint8_t battery_level;
-	float battery_voltage;
+	uECG_data data;
 	int *RR_hist;
 	int rr_hist_len;
 	int rr_hist_pos;
-	int last_pack_id;
-	int last_RR;
-	int last_RR_id;
 	float stress;
 	float score;
 	int on_screen_id;
+	int last_saved_rr_id;
 }sdevice_data;
 
 void push_device_RR(sdevice_data *dev, int RR)
@@ -356,7 +364,7 @@ void push_device_RR(sdevice_data *dev, int RR)
 	sc_addV(stress_charts + dev->on_screen_id, dev->stress);
 	
 	char stxt[128];
-	sprintf(stxt, "stress level: %d", (int)(dev->stress*100.0));
+	sprintf(stxt, "BPM %d steps %d bat %.2f skin %d", dev->data.bpm, dev->data.steps, dev->data.battery_mv, dev->data.skin_res);
 	if(dev->on_screen_id == 0) gtk_label_set_text(lb_stress_1, stxt);	
 	if(dev->on_screen_id == 1) gtk_label_set_text(lb_stress_2, stxt);	
 	if(dev->on_screen_id == 2) gtk_label_set_text(lb_stress_3, stxt);	
@@ -367,23 +375,19 @@ void push_device_RR(sdevice_data *dev, int RR)
 sdevice_data ble_devices[100];
 int known_devices = 0;
 
-enum param_sends
-{
-	param_batt = 0,
-	param_bpm,
-	param_sdnn,
-	param_rmssd,
-	param_lastRR,
-	param_pnn_bins,
-	param_max_wo_bins
-};
-
 int known_dev_inited = 0;
+float skin_d_avg = 0;
 
 void device_parse_response(uint8_t *buf, int len)
+//we should be prepared that bytestream has missed bytes - it happens too often to ignore,
+//so each data transfer from base starts with 2 fixed prefix bytes. But it could happen that
+//actual data contents occasionally matches these prefix bytes, so we can't just treat them
+//as guaranteed packet start - so we assume it _could_ be a packet start and try to parse
+//the result, and see if it makes sense
 {
-	if(!known_dev_inited)
-	{
+	if(!known_dev_inited) //we keep track of most active devices to display them - once in a while
+ 	{ //due to errors the same uECG might appear with different MACs, so we need to forget devices
+	//that don't send many packets
 		for(int x = 0; x < 100; x++)
 		{
 			ble_devices[x].RR_hist = (int*)malloc(1000*sizeof(int));
@@ -396,8 +400,8 @@ void device_parse_response(uint8_t *buf, int len)
 		draw_emg = 0;
 		sfft_1D_init(&ft, 512);
 	}
-//	if(sockfd < 0) connection_init();
-	if(save_turned_on && save_file < 0)
+//	if(sockfd < 0) connection_init(); //network interface init - not operational for some time already, need full rework
+	if(save_turned_on && save_file < 0) //if saving into file was just requested - init it
 	{
 		time_t rawtime;
 		time (&rawtime);
@@ -405,22 +409,28 @@ void device_parse_response(uint8_t *buf, int len)
 		char repfname[256];
 		sprintf(repfname, "ecg_log_y%d_m%d_d%d_h%d_m%d_s%d.txt", (2000+curTm->tm_year-100), curTm->tm_mon, curTm->tm_mday, curTm->tm_hour, curTm->tm_min, curTm->tm_sec);
 		save_file = open(repfname, O_WRONLY | O_CREAT, 0b110110110);
+		sprintf(repfname, "ecg_RR_y%d_m%d_d%d_h%d_m%d_s%d.txt", (2000+curTm->tm_year-100), curTm->tm_mon, curTm->tm_mday, curTm->tm_hour, curTm->tm_min, curTm->tm_sec);
+		save_file_RR = open(repfname, O_WRONLY | O_CREAT, 0b110110110);
 		sprintf(repfname, "ecg_skin_y%d_m%d_d%d_h%d_m%d_s%d.txt", (2000+curTm->tm_year-100), curTm->tm_mon, curTm->tm_mday, curTm->tm_hour, curTm->tm_min, curTm->tm_sec);
 		save_file_skin = open(repfname, O_WRONLY | O_CREAT, 0b110110110);
 	}
-	if(!save_turned_on && save_file > 0)
+	if(!save_turned_on && save_file > 0) //if saving was just disabled - close files
 	{
 		close(save_file);
 		close(save_file_skin);
+		close(save_file_RR);
 		save_file = -1;
+		save_file_RR = -1;
 		save_file_skin = -1;
 	}
-	if(!response_inited)
+	if(!response_inited) //init buffer for storing bytestream data ("response")
 	{
 		response_inited = 1;
 		response_buf = (uint8_t*)malloc(response_buf_len);
 		response_pos = 0;
 	}
+	//===========
+	//buffer for storing bytestream, if buffer is overfilled - older half of the buffer is dropped
 	if(len > response_buf_len/2) len = response_buf_len/2;
 	if(response_pos > response_buf_len/2)
 	{
@@ -430,67 +440,49 @@ void device_parse_response(uint8_t *buf, int len)
 	}
 	memcpy(response_buf+response_pos, buf, len);
 	response_pos += len;
+	//======= at this point, response_buf contains most recent unprocessed data, starting from 0
 	int processed_pos = 0;
-	for(int x = 0; x < response_pos-25; x++)
+	for(int x = 0; x < response_pos-25; x++) //25 - always less than minimum valid packet length
 	{
 		if(response_buf[x] == uart_prefix[0] && response_buf[x+1] == uart_prefix[1])
-		{
+		{//we detected possible start of the packet, trying to make sense of it
 			uint8_t rssi_level = response_buf[x+2];
 			uint8_t *pack = response_buf + x + 3;
-			if(ble_mode)
+			if(ble_mode) //in each mode packet structure is completely different
 			{
-				if(x + 37 >= response_pos) continue;
-				uint8_t mac[6];
-				for(int p = 0; p < 6; p++)
+				uECG_data res_data;
+				int detected_data_count = parse_ble_packet(pack, response_pos - x - 3, &res_data);
+				if(detected_data_count < 0) //not from uECG or corrupted/unrecognized packet
+					continue;
+				if(detected_data_count == 0) //it's from uECG but has no ECG data
 				{
-					mac[5-p] = pack[3+p];
-				}
-				if(mac[0] != 0xBA || mac[1] != 0xBE)
-				{
-					processed_pos = x + 37;
-					continue;					
-				}
-				uint8_t name[16];
-				for(int p = 0; p < 16; p++)
-					name[p] = pack[3+6+2+p];
-				if(name[0] == 'C' && name[1] == 'O' && name[2] == '2')
-				{
-					name[8] = 0;
-					for(int p = 0; p < 6; p++)
-						printf("%02X ", mac[p]);
-					printf(": %s\n", name);
-					processed_pos = x + 37;
+					processed_pos = x+5;
 					continue;
 				}
+				
+				printf("dev id %08X\n", res_data.ID);
+				
 				int dev_by_mac = -1;
-				if(name[0] == 'u' && name[1] == 'E' && name[2] == 'C' && name[3] == 'G')
+				for(int d = 0; d < known_devices; d++)
 				{
-					for(int d = 0; d < known_devices; d++)
+					if(ble_devices[d].data.ID == res_data.ID)
 					{
-						int match = 1;
-						for(int m = 0; m < 6; m++)
-							if(ble_devices[d].mac[m] != mac[m])
-								match = 0;
-						if(match)
-						{
-							dev_by_mac = d;
-							break;
-						}
+						dev_by_mac = d;
+						break;
 					}
-					if(dev_by_mac < 0)
+				}
+				if(dev_by_mac < 0)
+				{
+					if(known_devices < 50)
 					{
-						if(known_devices < 50)
-						{
-							for(int m = 0; m < 6; m++)
-								ble_devices[known_devices].mac[m] = mac[m];
-							ble_devices[known_devices].score = 1;
-							ble_devices[known_devices].ver = 2;
-							ble_devices[known_devices].last_pack_id = 0;
-							ble_devices[known_devices].last_RR = 0;
-							ble_devices[known_devices].last_RR_id = -1;
-							dev_by_mac = known_devices;
-							known_devices++;
-						}
+						for(int m = 0; m < 6; m++)
+							ble_devices[known_devices].data.ID = res_data.ID;
+						ble_devices[known_devices].data.last_pack_id = res_data.last_pack_id;
+						ble_devices[known_devices].data.rr_id = res_data.rr_id;
+						ble_devices[known_devices].data.rr_current = res_data.rr_current;
+						ble_devices[known_devices].score = 1;
+						dev_by_mac = known_devices;
+						known_devices++;
 					}
 				}
 				if(dev_by_mac < 0) //overflow
@@ -514,103 +506,51 @@ void device_parse_response(uint8_t *buf, int len)
 					continue;
 				}
 				ble_devices[dev_by_mac].on_screen_id = active_dev_id;
-								
-				uint8_t *data_pack = pack + 3 + 6 + 2 + 4 + 1;
-				uint8_t packet_id = data_pack[0];
-				uint8_t param_id = data_pack[1];
-				uint8_t param_hb = data_pack[2];
-				uint8_t param_lb = data_pack[3];
-				
-				if(param_id == param_batt)
+				if((ble_devices[dev_by_mac].data.rr_id + 1)%16 == res_data.rr_id)
 				{
-					ble_devices[dev_by_mac].battery_level = param_hb;
-					if(param_lb == 3)
-						ble_devices[dev_by_mac].ver = 3;
-					batt_voltage = ble_devices[dev_by_mac].battery_level;
-					int bat_v = 0;
-					if(ble_devices[dev_by_mac].battery_level > 147)
-						bat_v = 4200;
-					else bat_v = 4200 - (147 - ble_devices[dev_by_mac].battery_level)*35;
-					batt_voltage = bat_v;
-					batt_voltage /= 1000.0;
-					ble_devices[dev_by_mac].battery_voltage = batt_voltage;					
+					push_device_RR(ble_devices+dev_by_mac, res_data.rr_current);
 				}
-				if(param_id == param_lastRR)
-				{
-					int rr_val = ((param_hb&0b1111)<<8) + param_lb;
-					if(rr_val > 32767) rr_val = -65536 + rr_val;
-					int rr_id = param_hb>>4;
-					
-					if((ble_devices[dev_by_mac].last_RR_id + 1)%16 == rr_id)
-					{
-						push_device_RR(ble_devices+dev_by_mac, rr_val);
-					}
-					ble_devices[dev_by_mac].last_RR_id = rr_id;
-					ble_devices[dev_by_mac].last_RR = rr_val;
-				}
-				
-				int sp = 4;
-				int vv = (data_pack[sp]<<8) | data_pack[sp+1];
-				if(vv > 32768) vv = -65536 + vv;
-				int start_value = vv;
-				sp += 2;
-				int scale = data_pack[sp];
-				sp++;
-//				printf("stv %d scale %d \n", start_value, scale);
-				int pack_values[20];
-				int pack_data_count = 15;
-				if(ble_devices[dev_by_mac].ver == 2)
-				{
-					pack_data_count = 9;
-					sp = 4;
-					for(int p = 0; p < pack_data_count; p++)
-					{
-						pack_values[p] = (data_pack[sp]<<8) | data_pack[sp+1];
-						if(pack_values[p] > 32767)
-							pack_values[p] = -65536 + pack_values[p];
-						sp += 2;
-					}
-				}
-				else
-				{
-					pack_values[0] = start_value;
-					sp = 7;
-					for(int p = 1; p < pack_data_count; p++)
-					{
-						int dv = data_pack[sp];
-						sp++;
-						if(dv > 127) dv = -256+dv;
-						dv *= scale;
-						pack_values[p] = pack_values[p-1] + dv;
-					}
-				}
-//				for(int p = 0; p < pack_data_count; p++)
-//					printf("%d ", pack_values[p]);
-//				printf("\n");
-//				for(int p = 0; p < pack_data_count; p++)
-//					printf("%g ", sc_getV(ecg_charts + active_dev_id, pack_data_count-p));
-//				printf("\n");
-//				printf("====================\n");
+				ble_devices[dev_by_mac].data.rr_id = res_data.rr_id;
+				ble_devices[dev_by_mac].data.rr_current = res_data.rr_current;
 
-				int d_id = packet_id - ble_devices[dev_by_mac].last_pack_id;
-				ble_devices[dev_by_mac].last_pack_id = packet_id;
+				int d_id = res_data.last_pack_id - ble_devices[dev_by_mac].data.last_pack_id;
+				ble_devices[dev_by_mac].data.last_pack_id = res_data.last_pack_id;
 				if(d_id < 0) d_id += 256;
 				
-//				printf("pack_id %d d_id %d, dev_score %g\n", packet_id, d_id, known_scores[dev_by_mac]);
-				 
-				if(d_id > pack_data_count)
+				if(d_id > detected_data_count)
 				{
-					printf("pack_id %d d_id %d, dev_score %g\n", packet_id, d_id, ble_devices[dev_by_mac].score);
+					printf("pack_id %d d_id %d, dev_score %g\n", res_data.last_pack_id, d_id, ble_devices[dev_by_mac].score);
 					float vv = sc_getV(ecg_charts + active_dev_id, 1);
-					for(int p = 0; p < d_id - pack_data_count; p++)
+					for(int p = 0; p < d_id - detected_data_count; p++)
 						sc_addV(ecg_charts + active_dev_id, vv);
-					d_id = pack_data_count;
+					d_id = detected_data_count;
 				}
 				for(int p = 0; p < d_id; p++)
 				{
-					float vv = pack_values[pack_data_count - d_id + p];
+					float vv = res_data.RR_data[detected_data_count - d_id + p];
 					sc_addV(ecg_charts + active_dev_id, vv);
 				}
+				if(save_file > 0 && save_turned_on && active_dev_id == 0)
+				{
+					char out_line[256];
+					int len = 0;
+					struct timespec spec;
+					clock_gettime(CLOCK_REALTIME, &spec);
+					for(int p = 0; p < d_id; p++)
+					{
+						int val = res_data.RR_data[detected_data_count - d_id + p];
+						len = sprintf(out_line, "%d.%d %d\n", spec.tv_sec, (int)(spec.tv_nsec / 1.0e6), (int)val);
+						write(save_file, out_line, len);
+					}
+					if(ble_devices[dev_by_mac].data.rr_id != ble_devices[dev_by_mac].last_saved_rr_id)
+					{
+						len = sprintf(out_line, "%d.%d %d %d\n", spec.tv_sec, (int)(spec.tv_nsec / 1.0e6), res_data.rr_current, res_data.rr_prev);
+						write(save_file_RR, out_line, len);
+						ble_devices[dev_by_mac].last_saved_rr_id = ble_devices[dev_by_mac].data.rr_id;
+					}
+//					ble_devices[dev_by_mac].last_RR = rr_val;
+					
+				}				
 //				for(int p = 0; p < pack_data_count; p++)
 //				{
 //					float vv = pack_values[p];
@@ -632,15 +572,75 @@ void device_parse_response(uint8_t *buf, int len)
 //			if(last_pack_id + 1 != packet_id && last_pack_id != packet_id)
 //				printf("pack err %d %d\n", last_pack_id, packet_id);
 			uint8_t data_points = pack[ppos++];
-			uint8_t battery_level = pack[ppos++];
+			int param_id = pack[ppos++];
+			
+			uint8_t param_hb = pack[ppos++];
+			uint8_t param_lb = pack[ppos++];
+			uint8_t param_tb = pack[ppos++];
+			
+			uint8_t battery_level = 0;
+			
+			int data_pos = ppos;
+								
+			if(param_id == param_batt_bpm)
+			{
+				battery_level = param_hb;
+				int bat_v = 0;
+				bat_v = 2000 + battery_level * 10;
+//				if(battery_level > 147)
+//					bat_v = 4200;
+//				else bat_v = 4200 - (147 - battery_level)*35;
+				batt_voltage = bat_v;
+				batt_voltage /= 1000.0;
+				
+//				ble_devices[dev_by_mac].bpm = param_tb;
+			}
+/*				if(param_id == param_lastRR)
+				{
+					int rr_val = (param_lb<<8) + param_tb;
+					if(rr_val > 32767) rr_val = -65536 + rr_val;
+					
+					int rr_id = param_hb;
+
+//					if(ble_devices[dev_by_mac].last_RR_id != rr_id)
+					if((ble_devices[dev_by_mac].last_RR_id + 1)%16 == rr_id)
+					{
+						push_device_RR(ble_devices+dev_by_mac, rr1_val);
+					}
+//					printf("")
+					ble_devices[dev_by_mac].last_RR_id = rr_id;
+					ble_devices[dev_by_mac].last_RR = rr1_val;
+				}
+				if(param_id == param_skin_res)
+				{
+					ble_devices[dev_by_mac].skin_res = (param_hb<<8) | param_lb;
+				}*/
+			if(param_id == param_imu_steps)
+			{
+				bmi_steps = (param_hb<<8) | param_lb;
+			}
+			if(param_id == param_imu_acc)
+			{					
+				bmi_ax = decode_acc(param_hb);
+				bmi_ay = decode_acc(param_lb);
+				bmi_az = decode_acc(param_tb);
+			}
+			
+//			uint8_t battery_level = pack[ppos++];
 
 //			printf("pack %d %d %d %d %d\n", pack[0], pack[1], pack[2], pack[3], pack[4]);
 						
 			avg_rssi *= 0.9;
 			avg_rssi += 0.1 * (float)rssi_level;
+		
+			static int non_emg_cnt = 0;
 			
+			if(data_points != 32) non_emg_cnt++;
+			if(non_emg_cnt > 1000)
+				draw_emg = 0;
 			if(data_points == 32) //EMG mode
 			{
+				non_emg_cnt = 0;
 				if(x + message_length >= response_pos) continue;
 				if(x + 40 >= response_pos) continue;
 				uint8_t check = 0;
@@ -659,7 +659,7 @@ void device_parse_response(uint8_t *buf, int len)
 				int dev_id = -1;
 				for(int d = 0; d < known_devices; d++)
 				{
-					if(ble_devices[d].id == unit_id)
+					if(ble_devices[d].data.ID == unit_id)
 						dev_id = d;
 				}
 				for(int d = 0; d < known_devices; d++)
@@ -674,7 +674,7 @@ void device_parse_response(uint8_t *buf, int len)
 							break;
 						}
 					if(ins_id < 0) ins_id = known_devices;
-					ble_devices[ins_id].id = unit_id;
+					ble_devices[ins_id].data.ID = unit_id;
 					ble_devices[ins_id].score = 30;
 					if(ins_id == known_devices && known_devices < 100) known_devices++;
 				}
@@ -731,7 +731,15 @@ void device_parse_response(uint8_t *buf, int len)
 			}
 //			check--;
 			if(check != pack[message_length-1])
-				printf("check %d pack check %d\n", check, pack[message_length-1]);
+			{
+				printf("check %d pack check %d length %d\n", check, pack[message_length-1], message_length);
+//				check = pack[message_length-1];
+//				for(int x = 0; x < message_length; x++)
+//				{
+//					printf("%02X ", pack[x]);
+//				}
+//				printf("\n");
+			}
 //			check += 1;
 //			check = pack[5 + data_points*2];
 			if(check == pack[message_length-1])
@@ -749,37 +757,36 @@ void device_parse_response(uint8_t *buf, int len)
 			}
 //			printf("check %d pcheck %d\n", check, pack[5 + data_points*2]);
 			if(check == pack[message_length-1])
-			{
-				batt_voltage = battery_level;
-				int bat_v = 0;
-				if(battery_level > 147)
-					bat_v = 4200;
-				else bat_v = 4200 - (147 - battery_level)*35;
-				batt_voltage = bat_v;
-				batt_voltage /= 1000.0;
+			{				
+				
+//				printf("A: %d %d %d S %d\n", acc_x, acc_y, acc_z, steps);
 //				batt_voltage = batt_voltage * 3.0 /255.0 * 1.2 / 0.45 * 1.35;
 //				printf("batv %g\n", batt_voltage);
 				int16_t ch0[64];
 				int16_t ch1[64];
-				int pos = ppos+4;
+				
+				int pos = data_pos;
+
 				if(last_pack_id != packet_id)
-					for(int x = 0; x < data_points; x++)
+					for(int n = 0; n < data_points; n++)
 				{
 					float pv = sc_getV(acc_charts, 1);
-					ch0[x] = (pack[pos]<<8) | (pack[pos+1]); pos += 2;
-					ch1[x] = ch0[x];//(pack[pos]<<8) | (pack[pos+1]); pos += 2;
+					int16_t val = (pack[pos]<<8) | (pack[pos+1]);
+					printf(" %d", val);
+					ch0[n] = val; pos += 2;
+					ch1[n] = ch0[x];//(pack[pos]<<8) | (pack[pos+1]); pos += 2;
 //					printf("%d %g\n", x, ch0[x]);
 					static float c0 = 0;
 					static float c1 = 0;
 					c0 *= 0.9;
-					c0 += 0.1*ch0[x];
+					c0 += 0.1*ch0[n];
 					c1 *= 0.9;
-					c1 += 0.1*ch1[x];
-					sc_addV(acc_charts, ch0[x]);
+					c1 += 0.1*ch1[n];
+					sc_addV(acc_charts, ch0[n]);
 
 					static int fft_dv = 0;
 					fft_dv++;
-					if(fft_dv > 10)
+					if(0)if(fft_dv > 10)
 					{
 						fft_dv = 0;
 						float dat[512];
@@ -799,16 +806,23 @@ void device_parse_response(uint8_t *buf, int len)
 							sp[h] = sqrt(sr[h]*sr[h] + si[h]*si[h]) * (float)(h) / 256.0;
 						spg_add_spectr(emg_chart, sp);
 					}
-					int has_skin_data = 0;
-					if(x == data_points-1 && pos < message_length-2)
+					int has_skin_data = (n == data_points-1);
+					if(has_skin_data)
 					{
-						has_skin_data = 1;
 						int16_t skin = (pack[pos]<<8) | (pack[pos+1]); pos += 2;
 						last_skin_v = skin;
-						sc_addV(acc_charts+1, skin);
+						static int skin_dec = 0;
+						skin_d_avg *= 0.95;
+						skin_d_avg += 0.05*(float)skin;
+						skin_dec++;
+						if(skin_dec > 10)
+						{
+							sc_addV(acc_charts+1, skin_d_avg);
+							skin_dec = 0;
+						}
 					}
 
-					send_queue[unsent_data_cnt++] = ch0[x];
+					send_queue[unsent_data_cnt++] = ch0[n];
 					if(unsent_data_cnt > 1000) unsent_data_cnt = 1000;
 					
 					if(save_file > 0 && save_turned_on)
@@ -828,7 +842,7 @@ void device_parse_response(uint8_t *buf, int len)
 						}
 						struct timespec spec;
 						clock_gettime(CLOCK_REALTIME, &spec);
-						len = sprintf(out_line, "%d.%d %d\n", spec.tv_sec, (int)(spec.tv_nsec / 1.0e6), (int)ch0[x]);
+						len = sprintf(out_line, "%d.%d %d\n", spec.tv_sec, (int)(spec.tv_nsec / 1.0e6), (int)ch0[n]);
 						write(save_file, out_line, len);
 					}
 //					sc_addV(acc_charts+1, ch1[x]);
@@ -844,8 +858,8 @@ void device_parse_response(uint8_t *buf, int len)
 
 					static int peak_in = 0;
 
-					int cv = ch0[x];
-					float cfv = ch0[x];
+					int cv = ch0[n];
+					float cfv = ch0[n];
 
 					avg_base *= 0.998; 
 					avg_base += 0.002 * cfv;
@@ -971,6 +985,11 @@ void device_parse_response(uint8_t *buf, int len)
 	memcpy(response_buf, response_buf+processed_pos, response_pos-processed_pos);
 	response_pos -= processed_pos;
 //	printf("processed to %d, new buf end %d\n", processed_pos, response_pos);
+}
+
+device_get_skin_res()
+{
+	return (int)skin_d_avg;
 }
 
 int device_get_bpm()

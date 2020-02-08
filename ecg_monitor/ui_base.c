@@ -25,12 +25,12 @@ void create_widgets()
 	lb_batt = gtk_label_new("");
 	lb_heart_rate = gtk_label_new("");
 
-	lb_stress_0 = gtk_label_new(" ");
-	lb_stress_1 = gtk_label_new("");
-	lb_stress_2 = gtk_label_new("");
-	lb_stress_3 = gtk_label_new("");
-	lb_stress_4 = gtk_label_new("");
-	lb_stress_5 = gtk_label_new("");
+	lb_stress_0 = gtk_label_new("0");
+	lb_stress_1 = gtk_label_new("1");
+	lb_stress_2 = gtk_label_new("2");
+	lb_stress_3 = gtk_label_new("3");
+	lb_stress_4 = gtk_label_new("4");
+	lb_stress_5 = gtk_label_new("5");
 	
 	chk_auto_scale = gtk_check_button_new_with_label("auto scale");
 	gtk_button_clicked(chk_auto_scale);

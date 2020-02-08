@@ -120,6 +120,8 @@
     <File Name="sft.h"/>
     <File Name="spectrogram.c"/>
     <File Name="spectrogram.h"/>
+    <File Name="packet_parser.c"/>
+    <File Name="packet_parser.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>

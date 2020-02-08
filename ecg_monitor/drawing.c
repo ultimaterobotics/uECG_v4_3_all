@@ -97,7 +97,8 @@ void draw_init()
 	}
 	sc_create_simple_chart(acc_charts+1, 2000, 0);
 	sc_setViewport(acc_charts+1, 10, 10, cw, 500);
-	sc_setParameter_cc(acc_charts+1, "scaling", "manual");
+//	sc_setParameter_cc(acc_charts+1, "scaling", "manual");
+	sc_setParameter_cc(acc_charts+1, "scaling", "auto");
 	sc_setParameter_cv(acc_charts+1, "zero value", 0.0);
 	sc_setParameter_cv(acc_charts+1, "scale", 1000.0);
 	sc_setParameter_cl(acc_charts+1, "color", 128, 128, 128);

@@ -306,7 +306,7 @@ int serial_main_loop()
 //	sprintf(rss, "RSSI %.1f", 78.0);
 	gtk_label_set_text(lb_rssi, rss);
  
-	sprintf(rss, "batt %.2fv", device_get_battery());
+	sprintf(rss, "%.2fv %g %g %g %d", device_get_battery(), device_get_ax(), device_get_ay(), device_get_az(), device_get_steps());
 //	sprintf(rss, "batt %.2fv", 3.84);
 	gtk_label_set_text(lb_batt, rss);
 //	PangoAttrList *attrs = pango_attr_list_new();
@@ -315,7 +315,7 @@ int serial_main_loop()
 //	pango_attr_list_insert(attrs, atrb);
 //	pango_attr_list_unref(attrs);
 	
-	sprintf(rss, "BPM %d", device_get_bpm());
+	sprintf(rss, "BPM %d SGR %d", device_get_bpm(), device_get_skin_res());
 //	sprintf(rss, "BPM %d", 68);
 	gtk_label_set_text(lb_heart_rate, rss);
 	
