@@ -55,7 +55,7 @@ AS       := /usr/bin/as
 ##
 ## User defined environment variables
 ##
-Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/ui_functions.c$(ObjectSuffix) $(IntermediateDirectory)/sys_functions.c$(ObjectSuffix) $(IntermediateDirectory)/serial_functions.c$(ObjectSuffix) $(IntermediateDirectory)/ui_base.c$(ObjectSuffix) $(IntermediateDirectory)/drawing.c$(ObjectSuffix) $(IntermediateDirectory)/simplechart.c$(ObjectSuffix) $(IntermediateDirectory)/device_functions.c$(ObjectSuffix) $(IntermediateDirectory)/fft.c$(ObjectSuffix) $(IntermediateDirectory)/sft.c$(ObjectSuffix) \
+Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/ui_functions.c$(ObjectSuffix) $(IntermediateDirectory)/sys_functions.c$(ObjectSuffix) $(IntermediateDirectory)/serial_functions.c$(ObjectSuffix) $(IntermediateDirectory)/ui_base.c$(ObjectSuffix) $(IntermediateDirectory)/drawing.c$(ObjectSuffix) $(IntermediateDirectory)/simplechart.c$(ObjectSuffix) $(IntermediateDirectory)/packet_parser.c$(ObjectSuffix) $(IntermediateDirectory)/device_functions.c$(ObjectSuffix) $(IntermediateDirectory)/fft.c$(ObjectSuffix) $(IntermediateDirectory)/sft.c$(ObjectSuffix) \
 	$(IntermediateDirectory)/spectrogram.c$(ObjectSuffix) 
 
 
@@ -142,6 +142,14 @@ $(IntermediateDirectory)/simplechart.c$(DependSuffix): simplechart.c
 
 $(IntermediateDirectory)/simplechart.c$(PreprocessSuffix): simplechart.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/simplechart.c$(PreprocessSuffix) simplechart.c
+
+$(IntermediateDirectory)/packet_parser.c$(ObjectSuffix): packet_parser.c $(IntermediateDirectory)/packet_parser.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "packet_parser.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/packet_parser.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/packet_parser.c$(DependSuffix): packet_parser.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/packet_parser.c$(ObjectSuffix) -MF$(IntermediateDirectory)/packet_parser.c$(DependSuffix) -MM packet_parser.c
+
+$(IntermediateDirectory)/packet_parser.c$(PreprocessSuffix): packet_parser.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/packet_parser.c$(PreprocessSuffix) packet_parser.c
 
 $(IntermediateDirectory)/device_functions.c$(ObjectSuffix): device_functions.c $(IntermediateDirectory)/device_functions.c$(DependSuffix)
 	$(CC) $(SourceSwitch) "device_functions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/device_functions.c$(ObjectSuffix) $(IncludePath)
