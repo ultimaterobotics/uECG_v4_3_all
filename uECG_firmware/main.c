@@ -400,7 +400,7 @@ void prepare_data_packet_ble()
 	if(cur_send_id == param_batt_bpm)
 	{
 		data_packet[2] = battery_level;
-		data_packet[3] = 4; //version_id
+		data_packet[3] = 5; //version_id
 		data_packet[4] = BPM;
 	}
 	if(cur_send_id == param_sdnn)
@@ -799,11 +799,6 @@ void mode_lowbatt()
 //	NRF_POWER->DCDCEN = 1;
 	NRF_POWER->SYSTEMOFF = 1;
 }
-void mode_resume_idle()
-{
-	fast_clock_start();
-	NRF_POWER->TASKS_CONSTLAT = 1;
-}
 void stop_rtc()
 {
 	NRF_RTC1->TASKS_STOP = 1;
@@ -918,6 +913,30 @@ void read_battery()
 	battery_level = res / 10;
 	return;
 }
+
+
+void mode_idle()
+{
+//	leds_pause();
+	pause_time();
+	NRF_POWER->TASKS_LOWPWR = 1;
+}
+void mode_resume_idle()
+{
+	NRF_POWER->TASKS_CONSTLAT = 1;
+	resume_time();
+//	leds_resume();
+}
+
+void low_power_cycle()
+{
+	NRF_RADIO->POWER = 0;
+//	mode_idle();
+	__WFI();
+//	mode_resume_idle();
+	NRF_RADIO->POWER = 1;
+}
+
 
 enum
 {
@@ -1098,6 +1117,7 @@ int main(void)
 
 	while(1)
 	{
+//		low_power_cycle();
 		uint32_t ms = millis();
 		if(0)if(measure_skin == 0 && ms - last_skin_time > 5000)
 		{

@@ -9,8 +9,8 @@ uint32_t led_set_mask = 0;
 void start_leds_timer()
 {
 	NRF_TIMER4->MODE = 0;
-	NRF_TIMER4->BITMODE = 0; //16 bit
-	NRF_TIMER4->PRESCALER = 1;
+	NRF_TIMER4->BITMODE = 3; //32 bits
+	NRF_TIMER4->PRESCALER = 4;
 	NRF_TIMER4->CC[0] = 15000; //r
 	NRF_TIMER4->CC[1] = 80; //g
 	NRF_TIMER4->CC[2] = 10; //b
@@ -80,7 +80,7 @@ int val_to_cc(int val)
 	int v2 = val*val;
 	v2 >>= 2;
 	if(v2 == 0) v2 = 1;
-	if(v2 > 0xFFFF) v2 = 0xFFFF; 
+	if(v2 > 16384) v2 = 16384; 
 	return v2;
 }
 

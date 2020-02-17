@@ -2,9 +2,9 @@
 #include "nrf.h"
 #include "nrf_gpio.h"
 
-#define TIME_RESOLUTION 8
+#define TIME_RESOLUTION 250
 //32, 16 or 8
-#define TIMS_PER_MS 125
+#define TIMS_PER_MS 4
 //31 for 32, 63 for 16, 125 for 8
 
 
@@ -96,12 +96,12 @@ void TIMER2_IRQHandler(void)
 	ms_counter++;
 	if(ms_counter >= TIMS_PER_MS)
 	{
-		phase++;
-		if(phase > 3)
-		{
-			phase = 0;
-			return; //once per 4 cycles skip one 32-mcs cycle so average millis = 1000
-		}
+//		phase++;
+//		if(phase > 3)
+//		{
+//			phase = 0;
+//			return; //once per 4 cycles skip one 32-mcs cycle so average millis = 1000
+//		}
 		ms_time++;
 		ms_counter = 0;
 		s_counter++;
