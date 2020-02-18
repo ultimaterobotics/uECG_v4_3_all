@@ -26,7 +26,7 @@ uint32_t valid_ids[16384]; //list of valid IDs: each device sends out its name o
 						//most packets don't have name included - so need to keep track of them
 int valid_list_pos = 0;
 int valid_list_inited = 0;
-
+int protocol_version = 0;
 
 //base unit in BLE mode captures all BLE traffic on given channel, so we need to check if 
 //received packet is from uECG device, and only then parse it
@@ -123,7 +123,11 @@ int parse_ble_packet(uint8_t *pack, int maxlen, uECG_data *uecg_res)
 		if(param_id == param_batt_bpm) //battery level and BPM data
 		{
 			uecg_res->battery_mv = 2000 + param_hb * 10;
-			uecg_res->bpm = param_tb;
+			protocol_version = param_lb;
+			if(protocol_version == 4)
+				uecg_res->bpm = param_tb / 1.275;
+			else
+				uecg_res->bpm = param_tb;
 		}
 		if(param_id == param_lastRR) //2 RR intervals: current and previous
 		{ //If connections is poor - we might miss packet with RR data, but when 2 RRs are in a single packet
@@ -138,6 +142,12 @@ int parse_ble_packet(uint8_t *pack, int maxlen, uECG_data *uecg_res)
 			// when translating to other languages it's more reliable than relying on type properties
 			int rr2_val = (v2_h<<8) + v2_l; //previous RR interval
 			if(rr2_val > 32767) rr2_val = -65536 + rr2_val;
+
+			if(protocol_version == 4)
+			{
+				rr1_val /= 1.275;
+				rr2_val /= 1.275;
+			}
 
 			uecg_res->rr_id = param_mod; //param_mod contains RR identifier, from 0 to 15 - increased by 1 with each detected
 			uecg_res->rr_current = rr1_val; //beat on the device, required to identify duplicates: protocol sends the same data many
