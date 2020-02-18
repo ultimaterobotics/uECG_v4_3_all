@@ -273,7 +273,7 @@ void prepare_data_packet()
 	if(cur_send_id == param_batt_bpm)
 	{
 		data_packet[idx++] = battery_level;
-		data_packet[idx++] = 4; //version_id
+		data_packet[idx++] = 5; //version_id
 		data_packet[idx++] = BPM;
 	}
 	if(cur_send_id == param_sdnn)
