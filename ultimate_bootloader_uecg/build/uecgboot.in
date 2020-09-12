@@ -1,0 +1,1 @@
+build//uecgboot/main.c.o build//uecgboot/timer_core.c.o build//uecgboot/fast_radio.c.o build//uecgboot/uart_interface.c.o build//uecgboot/gcc_startup_nrf52832_bootloader.S.o  -lc -lnosys -lm

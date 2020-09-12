@@ -1,0 +1,1 @@
+build//uboot/main.c.o build//uboot/timer_core.c.o build//uboot/fast_radio.c.o build//uboot/uart_interface.c.o build//uboot/gcc_startup_nrf52832_bootloader.S.o  -lc -lnosys -lm
