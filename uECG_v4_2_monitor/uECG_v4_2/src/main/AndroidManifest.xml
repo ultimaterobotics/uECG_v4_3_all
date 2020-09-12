@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ultimaterobotics.uecgmonitor">
+    package="com.ultimaterobotics.uecgmonitor4_2">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -15,8 +16,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name="com.ultimaterobotics.uecgmonitor4_2.ble_uecg_service"
+            android:process=".UECG_service"
+            android:enabled="true"
+            android:exported="false"></service>
+
         <activity android:name=".MainActivity"
-            android:alwaysRetainTaskState="true">
+            android:alwaysRetainTaskState="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
