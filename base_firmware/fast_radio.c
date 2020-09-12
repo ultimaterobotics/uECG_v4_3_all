@@ -16,6 +16,7 @@ volatile uint32_t last_rx_time = 0;
 
 volatile uint8_t current_mode = 0; // 0 - off, 1 - rx, 2 - tx, 3 - tx->rx
 uint8_t rx_packet[256];
+uint8_t tx_packet[256];
 
 
 uint8_t rx_packet_stack[370];
@@ -24,6 +25,14 @@ int rx_packet_stack_q = 37;
 int rx_pack_stack_pos = 0;
 int rx_pack_stack_len = 10;
 
+enum
+{
+	rm_rx_end = 1,
+	rm_tx_end,
+	rm_rx2tx,
+	rm_tx2rx,
+	rm_rx2rx
+};
 
 void fr_disable()
 {
@@ -43,15 +52,16 @@ void fr_init(int packet_length)
     NRF_RADIO->TXPOWER   = (RADIO_TXPOWER_TXPOWER_Pos4dBm << RADIO_TXPOWER_TXPOWER_Pos);
     NRF_RADIO->FREQUENCY = 21UL; 
 //    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_2Mbit << RADIO_MODE_MODE_Pos);
-//    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_250Kbit << RADIO_MODE_MODE_Pos);
-    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_1Mbit << RADIO_MODE_MODE_Pos);
+    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_250Kbit << RADIO_MODE_MODE_Pos);
+//    NRF_RADIO->MODE      = (RADIO_MODE_MODE_Nrf_1Mbit << RADIO_MODE_MODE_Pos);
 
     // Radio address config
     NRF_RADIO->PREFIX0     = 0x44332211UL;  // Prefix byte of addresses 3 to 0
     NRF_RADIO->PREFIX1     = 0x88776655UL;  // Prefix byte of addresses 7 to 4
     NRF_RADIO->BASE0       = 0x0EE60DA7UL;  // Base address for prefix 0
-    NRF_RADIO->BASE1       = 0x0EE6050CUL;  // Base address for prefix 1-7
-    NRF_RADIO->TXADDRESS   = 0x01UL;        // Set device address 1 to use when transmitting
+//    NRF_RADIO->BASE1       = 0x0EE6050CUL;  // Base address for prefix 1-7
+    NRF_RADIO->BASE1       = 0x0EE60DA7UL;  // Base address for prefix 1-7
+    NRF_RADIO->TXADDRESS   = 0x0UL;        // Set device address 0 to use when transmitting
     NRF_RADIO->RXADDRESSES = 0b00000001;        // receive on address 0
 
     // Packet configuration
@@ -166,10 +176,11 @@ void fr_mode_rx_only()
 	else if(!(NRF_RADIO->STATE & 0b011)) fr_disable(); //states 1, 2, 3 responsible for RX
 	
 	NRF_RADIO->POWER = 1;
-	NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk | RADIO_SHORTS_ADDRESS_RSSISTART_Msk;
+//	NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk | RADIO_SHORTS_ADDRESS_RSSISTART_Msk;
+	NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_ADDRESS_RSSISTART_Msk;
 	NRF_RADIO->EVENTS_READY = 0;
 	NRF_RADIO->TASKS_RXEN = 1;
-	current_mode = 1;
+	current_mode = rm_rx2rx;
 }
 void fr_mode_tx_only()
 {
@@ -179,7 +190,7 @@ void fr_mode_tx_only()
 	
 	NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk | RADIO_SHORTS_ADDRESS_RSSISTART_Msk;
 	NRF_RADIO->TASKS_TXEN = 1;
-	current_mode = 2;
+	current_mode = rm_tx_end;
 }
 void fr_mode_tx_then_rx()
 {
@@ -192,12 +203,14 @@ void fr_mode_tx_then_rx()
 	for(int x = 0; x < 20; x++) ; //to make sure radio enters TXEN sequence before enabling DISABLED_RXEN shortcut
 	NRF_RADIO->SHORTS |= RADIO_SHORTS_DISABLED_RXEN_Msk;
 //	NRF_RADIO->INTENSET = RADIO_INTENSET_END_Msk;
-	current_mode = 3;
+	current_mode = rm_tx2rx;
 }
 
 void fr_send(uint8_t *pack)
 {
-	NRF_RADIO->PACKETPTR = (uint32_t)pack;
+	for(int x = 0; x < pack_payload; x++)
+		tx_packet[x] = pack[x];
+	NRF_RADIO->PACKETPTR = (uint32_t)tx_packet;
 	fr_mode_tx_only();
 }
 void fr_listen()
@@ -209,7 +222,9 @@ void fr_listen()
 }
 void fr_send_and_listen(uint8_t *pack)
 {
-	NRF_RADIO->PACKETPTR = (uint32_t)pack;
+	for(int x = 0; x < pack_payload; x++)
+		tx_packet[x] = pack[x];
+	NRF_RADIO->PACKETPTR = (uint32_t)tx_packet;
 	fr_mode_tx_then_rx();
 }
 int fr_has_new_packet()
@@ -263,16 +278,57 @@ void RADIO_IRQHandler()
 	{
 		NRF_RADIO->EVENTS_END = 0;
 		last_end_event_time = micros();
-		if(current_mode == 1)
+		if(current_mode == rm_rx_end || current_mode == rm_rx2rx || current_mode == rm_rx2tx)
 		{
 			rx_packet_counter++;
 			last_rx_time = last_end_event_time;
 			push_rx_pack();
+			if(current_mode == rm_rx2tx)
+			{
+				if(0)//NRF_RADIO->CRCSTATUS != 0)
+				{
+					tx_packet[0] = 111;
+					tx_packet[1] = 111;
+					tx_packet[2] = 111;
+					tx_packet[3] = 111;
+					while (NRF_RADIO->EVENTS_DISABLED == 0) ;
+					NRF_RADIO->EVENTS_DISABLED = 0;
+					
+					current_mode = rm_tx2rx;
+					NRF_RADIO->PACKETPTR = (uint32_t)tx_packet;
+					NRF_RADIO->SHORTS = RADIO_SHORTS_READY_START_Msk | RADIO_SHORTS_END_DISABLE_Msk | RADIO_SHORTS_ADDRESS_RSSISTART_Msk;
+					NRF_RADIO->TASKS_TXEN = 1;
+					for(int volatile t = 0; t < 20; t++) t++;
+					NRF_RADIO->SHORTS |= RADIO_SHORTS_DISABLED_RXEN_Msk;
+					
+//					fr_mode_rx_only();
+//					fr_mode_tx_then_rx();
+				}
+				else
+				{
+					NRF_RADIO->TASKS_RXEN = 1;
+				}
+//					fr_mode_rx_only();
+			}
+			else if(current_mode == rm_rx2rx)
+			{
+//				while (NRF_RADIO->EVENTS_DISABLED == 0) ;
+//				NRF_RADIO->EVENTS_DISABLED = 0;
+//				NRF_RADIO->TASKS_RXEN = 1;
+				NRF_RADIO->TASKS_START = 1;
+			}
+			
 		}
-		if(current_mode == 3) //tx event ended, switched to rx using shorts
+		else if(current_mode == rm_tx2rx) //tx event ended, switched to rx using shorts
 		{
 			NRF_RADIO->PACKETPTR = (uint32_t)rx_packet;
-			current_mode = 1;
+			current_mode = rm_rx2tx;
+			while (NRF_RADIO->EVENTS_DISABLED == 0) ;
+			NRF_RADIO->EVENTS_DISABLED = 0;
+			NRF_RADIO->TASKS_RXEN = 1;
+			
+//			NRF_RADIO->PACKETPTR = (uint32_t)rx_packet;
+//			current_mode = 1;
 		}
 	}
 }

@@ -1,11 +1,11 @@
 PROJECT_NAME     := ultimate_base
-TARGETS          := nrf52832_xxaa
+TARGETS          := ubase
 OUTPUT_DIRECTORY := build
 
 SDK_ROOT := /home/the_3d6/devtools/nrf/nRF5_SDK_14.1.0_1dda907
 PROJ_DIR := .
 
-$(OUTPUT_DIRECTORY)/nrf52832_xxaa.out: \
+$(OUTPUT_DIRECTORY)/ubase.out: \
   LINKER_SCRIPT  := ultimate_base_nrf52.ld
 
 # Source files common to all targets
@@ -17,18 +17,34 @@ SRC_FILES += \
   $(PROJ_DIR)/uart_interface.c \
   $(SDK_ROOT)/components/toolchain/gcc/gcc_startup_nrf52.S \
   $(SDK_ROOT)/components/toolchain/system_nrf52.c \
+  $(SDK_ROOT)/components/boards/boards.c \
+  $(SDK_ROOT)/components/libraries/util/app_error.c \
+  $(SDK_ROOT)/components/libraries/util/app_error_weak.c \
+  $(SDK_ROOT)/components/libraries/util/app_util_platform.c \
+  $(SDK_ROOT)/components/libraries/util/nrf_assert.c \
+  $(SDK_ROOT)/components/libraries/strerror/nrf_strerror.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
-  $(PROJ_DIR) \
-  config \
   $(SDK_ROOT)/components \
-  $(SDK_ROOT)/components/device \
-  $(SDK_ROOT)/components/drivers_nrf/hal \
-  $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd \
-  $(SDK_ROOT)/components/toolchain/cmsis/include \
+  $(SDK_ROOT)/components/libraries/experimental_memobj \
+  $(SDK_ROOT)/components/libraries/experimental_section_vars \
   $(SDK_ROOT)/components/toolchain \
   $(SDK_ROOT)/components/libraries/util \
+  $(SDK_ROOT)/components/libraries/balloc \
+  $(SDK_ROOT)/components/libraries/experimental_log \
+  $(SDK_ROOT)/components/libraries/experimental_log/src \
+  $(PROJ_DIR) \
+  $(SDK_ROOT)/components/toolchain/gcc \
+  $(SDK_ROOT)/components/libraries/bsp \
+  $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd \
+  config \
+  $(SDK_ROOT)/components/device \
+  $(SDK_ROOT)/components/boards \
+  $(SDK_ROOT)/components/drivers_nrf/delay \
+  $(SDK_ROOT)/components/toolchain/cmsis/include \
+  $(SDK_ROOT)/components/drivers_nrf/hal \
+  $(SDK_ROOT)/components/libraries/strerror \
 
 # Libraries common to all targets
 LIB_FILES += \
@@ -88,12 +104,12 @@ LIB_FILES += -lc -lnosys -lm
 .PHONY: default help
 
 # Default target - first one defined
-default: nrf52832_xxaa
+default: ubase
 
 # Print all targets that can be built
 help:
 	@echo following targets are available:
-	@echo		nrf52832_xxaa
+	@echo		ubase
 	@echo		sdk_config - starting external tool for editing sdk_config.h
 	@echo		flash      - flashing binary
 
@@ -107,7 +123,7 @@ $(foreach target, $(TARGETS), $(call define_target, $(target)))
 .PHONY: flash erase
 
 # Flash the program
-flash: $(OUTPUT_DIRECTORY)/nrf52832_xxaa.hex
+flash: $(OUTPUT_DIRECTORY)/ubase.hex
 	@echo Flashing: $<
 	nrfjprog -f nrf52 --program $< --sectorerase
 	nrfjprog -f nrf52 --reset
