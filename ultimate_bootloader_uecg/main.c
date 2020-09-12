@@ -123,8 +123,8 @@ int binary_exec(uint32_t address)
 //	start_code_fix();
 	uint32_t tst;
 	start_code_test(address, &tst);
-	uprintf("asm code test: addr %d res %d\n", address, tst);
-	delay_ms(200);
+//	uprintf("asm code test: addr %d res %d\n", address, tst);
+//	delay_ms(200);
 	start_code2(address);
 //	binexec(address);
 	return 0;
