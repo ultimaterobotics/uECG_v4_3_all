@@ -5,10 +5,11 @@ uECG - very small wearable ECG device that sends raw and processed data over BLE
 
 Project is in active development stage, at the current moment we have shared:
  * schematics and PCB design
- * ECG monitor program for Linux (not properly cleaned/commented yet)
- * Firmware for the main unit (more or less clean but not commented yet)
- * Firmware for the base unit (more or less clean but not commented yet)
- * Android app (quite dirty and with some bugs, but usable)
+ * ECG monitor program for Linux (outdated: might not work properly and will be replaced with cross-platform version soon)
+ * Firmware for the main unit, rather stable and reliable build. Next planned major update will cover better beat detection and more robust bpm processing. 
+ * Firmware for the base unit that supports uploading uECG firmware via radio
+ * Android app with major rework, quite stable now
+ * bootloader code for USB base station: supports base firmware update via USB without the need of STLink programmer
+ * bootloader code for uECG device: supports firmware update via radio (requires base with new firmware, old base firmware doesn't support this function)
 
-we are cleaning and commenting firmware and Android app code and will share them when ready.
 You can follow the project on Hackaday: https://hackaday.io/project/164486-uecg-a-very-small-wearable-ecg
