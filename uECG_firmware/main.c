@@ -295,7 +295,18 @@ void prepare_data_packet()
 		int v = mcp_get_filtered_skin();//skin_ble_avg;
 		data_packet[idx++] = v>>8;
 		data_packet[idx++] = v&0xFF;
-		data_packet[idx++] = 0;
+		float temp = bmi.T;
+		int ti = temp;
+		uint8_t t8 = 0;
+		if(ti < -20) ti = -20;
+		if(ti > 77) ti = 77;
+		if(ti < 30) t8 = 20 + ti;
+		if(ti > 47) t8 = 220 + (ti-47);
+		if(ti >= 30 && ti <= 47)
+		{
+			t8 = 50 + (temp-30.0)*10.0;
+		}
+		data_packet[idx++] = t8;
 	}
 	if(cur_send_id == param_lastRR)
 	{
@@ -331,7 +342,6 @@ void prepare_data_packet()
 		data_packet[idx++] = steps&0xFF;
 		data_packet[idx++] = g_byte;
 	}
-
 	if(cur_send_id == param_pnn_bins)
 	{
 		int bin_v1 = pNN_short_norm[bin_send_id] * 255.0;
@@ -357,11 +367,15 @@ void prepare_data_packet()
 	data_packet[idx++] = v>>8;
 	data_packet[idx++] = v&0xFF;
 
-	data_packet[0] = idx+1;
+	data_packet[0] = idx+2;
 	uint8_t check = 0;
 	for(int x = 0; x < idx; x++)
 		check += data_packet[x];
-	data_packet[idx] = check;
+	data_packet[idx++] = check;
+	uint8_t check_e = 0;
+	for(int x = 0; x < idx; x+=2)
+		check_e += data_packet[x];
+	data_packet[idx] = check_e;
 }
 
 void prepare_data_packet_ble()
@@ -422,7 +436,18 @@ void prepare_data_packet_ble()
 		int v = skin_ble_avg;
 		data_packet[2] = v>>8;
 		data_packet[3] = v&0xFF;
-		data_packet[4] = 0;
+		float temp = bmi.T;
+		int ti = temp;
+		uint8_t t8 = 0;
+		if(ti < -20) ti = -20;
+		if(ti > 77) ti = 77;
+		if(ti < 30) t8 = 20 + ti;
+		if(ti > 47) t8 = 220 + (ti-47);
+		if(ti >= 30 && ti <= 47)
+		{
+			t8 = 50 + (temp-30.0)*10.0;
+		}
+		data_packet[4] = t8;
 	}
 	if(cur_send_id == param_lastRR)
 	{
@@ -793,7 +818,7 @@ void mode_lowbatt()
 	NRF_SPI0->ENABLE = 0;
 	leds_set(0, 0, 0);
 	leds_set_driver(0);
-//	NRF_GPIO->OUTCLR = 1<<30;
+	NRF_GPIO->OUTCLR = 1<<11;
 //	nrf_delay_ms(1);
 	NRF_POWER->TASKS_LOWPWR = 1;
 //	NRF_POWER->DCDCEN = 1;
@@ -941,14 +966,15 @@ void low_power_cycle()
 enum
 {
 	radio_mode_fast = 0,
-	radio_mode_ble
+	radio_mode_ble,
+	radio_mode_fast64
 };
 
 uint8_t radio_mode = radio_mode_ble;
 
 void RADIO_IRQHandler()
 {
-	if(radio_mode == radio_mode_fast)
+	if(radio_mode == radio_mode_fast || radio_mode == radio_mode_fast64)
 		fr_irq_handler();
 	if(radio_mode == radio_mode_ble)
 		ble_irq_handler();
@@ -961,7 +987,7 @@ void switch_to_ble()
 	config_ble_adv();
 }
 
-void switch_to_fr()
+void switch_to_fr32()
 {
 	fr_disable();
 //	fr_poweroff();
@@ -969,11 +995,18 @@ void switch_to_fr()
 	fr_listen();	
 }
 
-void switch_to_fr_48()
+void switch_to_fr48()
 {
 	fr_disable();
 //	fr_poweroff();
 	fr_init(48);
+	fr_listen();	
+}
+void switch_to_fr64()
+{
+	fr_disable();
+//	fr_poweroff();
+	fr_init(64);
 	fr_listen();	
 }
 
@@ -981,8 +1014,13 @@ void process_btn_short()
 {
 	if(radio_mode == radio_mode_ble)
 	{
+		radio_mode = radio_mode_fast64;
+		switch_to_fr64();
+	}
+	else if(radio_mode == radio_mode_fast64)
+	{
 		radio_mode = radio_mode_fast;
-		switch_to_fr();
+		switch_to_fr32();
 	}
 	else
 	{
@@ -1014,12 +1052,14 @@ int main(void)
 	NRF_GPIO->PIN_CNF[pin_button] = (0b11 << 2); // pull up << 2 | input buffer << 1 | dir << 0
 //	NRF_GPIO->DIRCLR = 1<<pin_button;
 
-
 	fast_clock_start();
 	start_time();
-	NRF_GPIO->DIRSET = 1<<30;
-	NRF_GPIO->OUTSET = 1<<30;
+	NRF_GPIO->DIRSET = 1<<11;
+	NRF_GPIO->OUTSET = 1<<11;
 	leds_init();
+
+//	NRF_POWER->DCDCEN = 1;
+
 	for(int x = 0; x < 3; x++)
 	{
 		leds_set((x==0)*255, (x==1)*255, (x==2)*255);
@@ -1035,6 +1075,11 @@ int main(void)
 	if(radio_mode == radio_mode_fast)
 	{
 		fr_init(32);
+		fr_listen();
+	}
+	if(radio_mode == radio_mode_fast64)
+	{
+		fr_init(64);
 		fr_listen();
 	}
 	
@@ -1189,6 +1234,10 @@ int main(void)
 			{
 				bmi160_read();
 				bmi_skip_cnt++;
+				if(bmi_skip_cnt == 10)
+				{
+					bmi160_read_temp();
+				}
 				if(bmi_skip_cnt > 20)
 				{
 					bmi160_read_steps();
@@ -1243,6 +1292,33 @@ int main(void)
 			{
 				fr_send_and_listen(data_packet);
 				send_iter = 4;
+			}
+		}
+
+		if(radio_mode == radio_mode_fast64)
+		{
+			if(unsent_cnt > 15*(!emg_mode) && ms - last_sent_ms > ble_dt1)
+			{
+				prepare_data_packet();
+				fr_send_and_listen(data_packet);
+				unsent_cnt = 0;
+				last_sent_ms = ms;
+				send_iter = 1;
+				if(NRF_RNG->EVENTS_VALRDY)
+				{
+					volatile int rnd = NRF_RNG->VALUE;
+					NRF_RNG->EVENTS_VALRDY = 0;
+					ble_dt1 = 1 + 2*emg_mode + (rnd >> 6);
+					ble_dt2 = 1 + 2*emg_mode + (rnd%(3+3*emg_mode));
+					NRF_RNG->TASKS_START;
+				}
+			}
+			
+			if(last_sent_ms > 0 && ms - last_sent_ms > ble_dt2 && send_iter < 5)
+			{
+				fr_send_and_listen(data_packet);
+				last_sent_ms = ms;
+				send_iter++;
 			}
 		}
 		

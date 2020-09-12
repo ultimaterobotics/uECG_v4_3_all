@@ -1,0 +1,1 @@
+build//uECG/main.c.o build//uECG/ble_advertising.c.o build//uECG/mcp3911.c.o build//uECG/leds.c.o build//uECG/fast_radio.c.o build//uECG/bmi160.c.o build//uECG/fft_opt.c.o build//uECG/timer_core.c.o build//uECG/gcc_startup_nrf52.S.o build//uECG/system_nrf52.c.o  -lc -lnosys -lm

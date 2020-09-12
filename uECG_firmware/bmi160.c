@@ -178,6 +178,13 @@ void bmi160_read_steps()
 	bmi.step_cnt = step_cnt;
 }
 
+float bmi160_read_temp()
+{
+	int16_t temp_val;
+	bmi_read_buf(BMI_TEMPERATURE, 2, &temp_val);
+	bmi.T = 23 + (float)temp_val / 512.0;
+	return bmi.T;
+}
 
 void bmi160_stop()
 {

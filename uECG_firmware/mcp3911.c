@@ -409,10 +409,18 @@ int push_mcp_filter(int cv, int cv2)
 		sin60_w2 += vv2 * sf60 * (1.0 - avg_m);
 		cos60_w2 += vv2 * cf60 * (1.0 - avg_m);
 		
-		float filt_v = vv - 2.0*(sin50_w * sf50 + cos50_w * cf50);
-		float filt_v2 = vv2 - 2.0*(sin50_w2 * sf50 + cos50_w * cf50);
-		filt_v -= 2.0*(sin60_w * sf60 + cos60_w * cf60);
-		filt_v2 -= 2.0*(sin60_w2 * sf60 + cos60_w2 * cf60);
+		float filt_v;
+		float filt_v2;
+		if(sin50_w*sin50_w + cos50_w*cos50_w > sin60_w*sin60_w + cos60_w*cos60_w)
+		{
+			filt_v = vv - 2.0*(sin50_w * sf50 + cos50_w * cf50);
+			filt_v2 = vv2 - 2.0*(sin50_w2 * sf50 + cos50_w * cf50);			
+		}
+		else
+		{
+			filt_v = vv - 2.0*(sin60_w * sf60 + cos60_w * cf60);
+			filt_v2 = vv2 - 2.0*(sin60_w2 * sf60 + cos60_w2 * cf60);
+		}
 		tt += 0.0512295;
 		tt60 += 0.06147541;
 		if(tt > 1) tt -= 2;

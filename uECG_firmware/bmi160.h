@@ -32,6 +32,8 @@ typedef struct sBMI160
 
 	float G;
 	
+	float T;
+	
 	float qW;
 	float qX;
 	float qY;
@@ -56,6 +58,7 @@ void bmi160_lp_mode();
 int bmi_get_tap();
 
 void bmi160_read_steps();
+float bmi160_read_temp();
 
 int get_cur_len();
 int get_cur_ax(int p);

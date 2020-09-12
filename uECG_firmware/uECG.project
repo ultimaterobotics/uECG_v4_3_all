@@ -57,7 +57,7 @@
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory>/home/the_3d6/robotics/nrf5/nrf52_proj/MicroECG</WorkingDirectory>
+        <WorkingDirectory>/home/the_3d6/robotics/nrf5/nrf52_proj/uECG_v4</WorkingDirectory>
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild/>
