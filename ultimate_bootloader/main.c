@@ -196,7 +196,7 @@ enum
 
 void parse_in_packet(int len, uint8_t *pack)
 {
-	uprintf(" lastpos %d upos %d len %d\n", last_uart_pos, get_rx_position(), len);
+//	uprintf(" lastpos %d upos %d len %d\n", last_uart_pos, get_rx_position(), len);
 	if(len != 36)
 	{
 		pack_resp[0] = pack_prefix[0];
