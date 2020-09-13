@@ -443,7 +443,7 @@ RAM              0x0000000020000000 0x0000000000010000 xrw
 Linker script and memory map
 
 
-.text           0x0000000000004000     0x16b8
+.text           0x0000000000004000     0x161c
  *(.isr_vector)
  .isr_vector    0x0000000000004000      0x200 build/ubase/gcc_startup_nrf52.S.o
                 0x0000000000004000                __isr_vector
@@ -453,156 +453,156 @@ Linker script and memory map
                 0x0000000000004240                _mainCRTStartup
                 0x0000000000004240                _start
  .text.check_uart_packet
-                0x00000000000042b4      0x380 build/ubase/ultimate_base_main.c.o
+                0x00000000000042b4      0x2e4 build/ubase/ultimate_base_main.c.o
                 0x00000000000042b4                check_uart_packet
  .text.startup.main
-                0x0000000000004634      0x27c build/ubase/ultimate_base_main.c.o
-                0x0000000000004634                main
+                0x0000000000004598      0x27c build/ubase/ultimate_base_main.c.o
+                0x0000000000004598                main
  .text.TIMER0_IRQHandler
-                0x00000000000048b0       0x6c build/ubase/leds.c.o
-                0x00000000000048b0                TIMER0_IRQHandler
+                0x0000000000004814       0x6c build/ubase/leds.c.o
+                0x0000000000004814                TIMER0_IRQHandler
  .text.leds_init
-                0x000000000000491c       0x7c build/ubase/leds.c.o
-                0x000000000000491c                leds_init
+                0x0000000000004880       0x7c build/ubase/leds.c.o
+                0x0000000000004880                leds_init
  .text.leds_set_pwm
-                0x0000000000004998       0x14 build/ubase/leds.c.o
-                0x0000000000004998                leds_set_pwm
+                0x00000000000048fc       0x14 build/ubase/leds.c.o
+                0x00000000000048fc                leds_set_pwm
  .text.fr_disable
-                0x00000000000049ac       0x2c build/ubase/fast_radio.c.o
-                0x00000000000049ac                fr_disable
- .text.fr_init  0x00000000000049d8       0x94 build/ubase/fast_radio.c.o
-                0x00000000000049d8                fr_init
+                0x0000000000004910       0x2c build/ubase/fast_radio.c.o
+                0x0000000000004910                fr_disable
+ .text.fr_init  0x000000000000493c       0x94 build/ubase/fast_radio.c.o
+                0x000000000000493c                fr_init
  .text.fr_ble_mode
-                0x0000000000004a6c       0xdc build/ubase/fast_radio.c.o
-                0x0000000000004a6c                fr_ble_mode
+                0x00000000000049d0       0xdc build/ubase/fast_radio.c.o
+                0x00000000000049d0                fr_ble_mode
  .text.fr_mode_tx_only
-                0x0000000000004b48       0x84 build/ubase/fast_radio.c.o
-                0x0000000000004b48                fr_mode_tx_only
+                0x0000000000004aac       0x84 build/ubase/fast_radio.c.o
+                0x0000000000004aac                fr_mode_tx_only
  .text.fr_listen
-                0x0000000000004bcc       0xa0 build/ubase/fast_radio.c.o
-                0x0000000000004bcc                fr_listen
+                0x0000000000004b30       0xa0 build/ubase/fast_radio.c.o
+                0x0000000000004b30                fr_listen
  .text.fr_send_and_listen
-                0x0000000000004c6c      0x100 build/ubase/fast_radio.c.o
-                0x0000000000004c6c                fr_send_and_listen
+                0x0000000000004bd0      0x100 build/ubase/fast_radio.c.o
+                0x0000000000004bd0                fr_send_and_listen
  .text.fr_has_new_packet
-                0x0000000000004d6c       0x18 build/ubase/fast_radio.c.o
-                0x0000000000004d6c                fr_has_new_packet
+                0x0000000000004cd0       0x18 build/ubase/fast_radio.c.o
+                0x0000000000004cd0                fr_has_new_packet
  .text.fr_get_packet
-                0x0000000000004d84       0x44 build/ubase/fast_radio.c.o
-                0x0000000000004d84                fr_get_packet
+                0x0000000000004ce8       0x44 build/ubase/fast_radio.c.o
+                0x0000000000004ce8                fr_get_packet
  .text.fr_has_new_packet2
-                0x0000000000004dc8       0x18 build/ubase/fast_radio.c.o
-                0x0000000000004dc8                fr_has_new_packet2
+                0x0000000000004d2c       0x18 build/ubase/fast_radio.c.o
+                0x0000000000004d2c                fr_has_new_packet2
  .text.fr_get_packet2
-                0x0000000000004de0       0x4c build/ubase/fast_radio.c.o
-                0x0000000000004de0                fr_get_packet2
+                0x0000000000004d44       0x4c build/ubase/fast_radio.c.o
+                0x0000000000004d44                fr_get_packet2
  .text.RADIO_IRQHandler
-                0x0000000000004e2c      0x138 build/ubase/fast_radio.c.o
-                0x0000000000004e2c                RADIO_IRQHandler
+                0x0000000000004d90      0x138 build/ubase/fast_radio.c.o
+                0x0000000000004d90                RADIO_IRQHandler
  .text.fr_get_irq_cnt
-                0x0000000000004f64        0xc build/ubase/fast_radio.c.o
-                0x0000000000004f64                fr_get_irq_cnt
+                0x0000000000004ec8        0xc build/ubase/fast_radio.c.o
+                0x0000000000004ec8                fr_get_irq_cnt
  .text.start_time
-                0x0000000000004f70       0x48 build/ubase/timer_core.c.o
-                0x0000000000004f70                start_time
- .text.micros   0x0000000000004fb8       0x28 build/ubase/timer_core.c.o
-                0x0000000000004fb8                micros
- .text.millis   0x0000000000004fe0        0xc build/ubase/timer_core.c.o
-                0x0000000000004fe0                millis
+                0x0000000000004ed4       0x48 build/ubase/timer_core.c.o
+                0x0000000000004ed4                start_time
+ .text.micros   0x0000000000004f1c       0x28 build/ubase/timer_core.c.o
+                0x0000000000004f1c                micros
+ .text.millis   0x0000000000004f44        0xc build/ubase/timer_core.c.o
+                0x0000000000004f44                millis
  .text.TIMER3_IRQHandler
-                0x0000000000004fec       0x28 build/ubase/timer_core.c.o
-                0x0000000000004fec                TIMER3_IRQHandler
+                0x0000000000004f50       0x28 build/ubase/timer_core.c.o
+                0x0000000000004f50                TIMER3_IRQHandler
  .text.TIMER2_IRQHandler
-                0x0000000000005014       0x64 build/ubase/timer_core.c.o
-                0x0000000000005014                TIMER2_IRQHandler
+                0x0000000000004f78       0x64 build/ubase/timer_core.c.o
+                0x0000000000004f78                TIMER2_IRQHandler
  .text.delay_ms
-                0x0000000000005078       0x28 build/ubase/timer_core.c.o
-                0x0000000000005078                delay_ms
+                0x0000000000004fdc       0x28 build/ubase/timer_core.c.o
+                0x0000000000004fdc                delay_ms
  .text.uart_init
-                0x00000000000050a0       0x54 build/ubase/uart_interface.c.o
-                0x00000000000050a0                uart_init
+                0x0000000000005004       0x54 build/ubase/uart_interface.c.o
+                0x0000000000005004                uart_init
  .text.uart_send
-                0x00000000000050f4       0x94 build/ubase/uart_interface.c.o
-                0x00000000000050f4                uart_send
+                0x0000000000005058       0x94 build/ubase/uart_interface.c.o
+                0x0000000000005058                uart_send
  .text.uart_send_remains
-                0x0000000000005188       0x24 build/ubase/uart_interface.c.o
-                0x0000000000005188                uart_send_remains
+                0x00000000000050ec       0x24 build/ubase/uart_interface.c.o
+                0x00000000000050ec                uart_send_remains
  .text.UARTE0_UART0_IRQHandler
-                0x00000000000051ac       0x84 build/ubase/uart_interface.c.o
-                0x00000000000051ac                UARTE0_UART0_IRQHandler
+                0x0000000000005110       0x84 build/ubase/uart_interface.c.o
+                0x0000000000005110                UARTE0_UART0_IRQHandler
  .text.get_rx_position
-                0x0000000000005230        0xc build/ubase/uart_interface.c.o
-                0x0000000000005230                get_rx_position
+                0x0000000000005194        0xc build/ubase/uart_interface.c.o
+                0x0000000000005194                get_rx_position
  .text.get_rx_buf
-                0x000000000000523c        0x8 build/ubase/uart_interface.c.o
-                0x000000000000523c                get_rx_buf
+                0x00000000000051a0        0x8 build/ubase/uart_interface.c.o
+                0x00000000000051a0                get_rx_buf
  .text.get_rx_buf_length
-                0x0000000000005244        0xc build/ubase/uart_interface.c.o
-                0x0000000000005244                get_rx_buf_length
- .text          0x0000000000005250       0x3c build/ubase/gcc_startup_nrf52.S.o
-                0x0000000000005250                Reset_Handler
-                0x0000000000005278                NMI_Handler
-                0x000000000000527a                HardFault_Handler
-                0x000000000000527c                MemoryManagement_Handler
-                0x000000000000527e                BusFault_Handler
-                0x0000000000005280                UsageFault_Handler
-                0x0000000000005282                SVC_Handler
-                0x0000000000005284                DebugMon_Handler
-                0x0000000000005286                PendSV_Handler
-                0x0000000000005288                SysTick_Handler
-                0x000000000000528a                RTC0_IRQHandler
-                0x000000000000528a                SWI0_EGU0_IRQHandler
-                0x000000000000528a                SWI2_EGU2_IRQHandler
-                0x000000000000528a                GPIOTE_IRQHandler
-                0x000000000000528a                PWM1_IRQHandler
-                0x000000000000528a                POWER_CLOCK_IRQHandler
-                0x000000000000528a                PDM_IRQHandler
-                0x000000000000528a                TEMP_IRQHandler
-                0x000000000000528a                QDEC_IRQHandler
-                0x000000000000528a                FPU_IRQHandler
-                0x000000000000528a                SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler
-                0x000000000000528a                TIMER4_IRQHandler
-                0x000000000000528a                I2S_IRQHandler
-                0x000000000000528a                SWI4_EGU4_IRQHandler
-                0x000000000000528a                TIMER1_IRQHandler
-                0x000000000000528a                PWM2_IRQHandler
-                0x000000000000528a                ECB_IRQHandler
-                0x000000000000528a                SPIM1_SPIS1_TWIM1_TWIS1_SPI1_TWI1_IRQHandler
-                0x000000000000528a                Default_Handler
-                0x000000000000528a                SAADC_IRQHandler
-                0x000000000000528a                CCM_AAR_IRQHandler
-                0x000000000000528a                WDT_IRQHandler
-                0x000000000000528a                SWI5_EGU5_IRQHandler
-                0x000000000000528a                RNG_IRQHandler
-                0x000000000000528a                RTC2_IRQHandler
-                0x000000000000528a                PWM0_IRQHandler
-                0x000000000000528a                SWI3_EGU3_IRQHandler
-                0x000000000000528a                RTC1_IRQHandler
-                0x000000000000528a                SWI1_EGU1_IRQHandler
-                0x000000000000528a                SPIM2_SPIS2_SPI2_IRQHandler
-                0x000000000000528a                NFCT_IRQHandler
-                0x000000000000528a                MWU_IRQHandler
-                0x000000000000528a                COMP_LPCOMP_IRQHandler
+                0x00000000000051a8        0xc build/ubase/uart_interface.c.o
+                0x00000000000051a8                get_rx_buf_length
+ .text          0x00000000000051b4       0x3c build/ubase/gcc_startup_nrf52.S.o
+                0x00000000000051b4                Reset_Handler
+                0x00000000000051dc                NMI_Handler
+                0x00000000000051de                HardFault_Handler
+                0x00000000000051e0                MemoryManagement_Handler
+                0x00000000000051e2                BusFault_Handler
+                0x00000000000051e4                UsageFault_Handler
+                0x00000000000051e6                SVC_Handler
+                0x00000000000051e8                DebugMon_Handler
+                0x00000000000051ea                PendSV_Handler
+                0x00000000000051ec                SysTick_Handler
+                0x00000000000051ee                RTC0_IRQHandler
+                0x00000000000051ee                SWI0_EGU0_IRQHandler
+                0x00000000000051ee                SWI2_EGU2_IRQHandler
+                0x00000000000051ee                GPIOTE_IRQHandler
+                0x00000000000051ee                PWM1_IRQHandler
+                0x00000000000051ee                POWER_CLOCK_IRQHandler
+                0x00000000000051ee                PDM_IRQHandler
+                0x00000000000051ee                TEMP_IRQHandler
+                0x00000000000051ee                QDEC_IRQHandler
+                0x00000000000051ee                FPU_IRQHandler
+                0x00000000000051ee                SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler
+                0x00000000000051ee                TIMER4_IRQHandler
+                0x00000000000051ee                I2S_IRQHandler
+                0x00000000000051ee                SWI4_EGU4_IRQHandler
+                0x00000000000051ee                TIMER1_IRQHandler
+                0x00000000000051ee                PWM2_IRQHandler
+                0x00000000000051ee                ECB_IRQHandler
+                0x00000000000051ee                SPIM1_SPIS1_TWIM1_TWIS1_SPI1_TWI1_IRQHandler
+                0x00000000000051ee                Default_Handler
+                0x00000000000051ee                SAADC_IRQHandler
+                0x00000000000051ee                CCM_AAR_IRQHandler
+                0x00000000000051ee                WDT_IRQHandler
+                0x00000000000051ee                SWI5_EGU5_IRQHandler
+                0x00000000000051ee                RNG_IRQHandler
+                0x00000000000051ee                RTC2_IRQHandler
+                0x00000000000051ee                PWM0_IRQHandler
+                0x00000000000051ee                SWI3_EGU3_IRQHandler
+                0x00000000000051ee                RTC1_IRQHandler
+                0x00000000000051ee                SWI1_EGU1_IRQHandler
+                0x00000000000051ee                SPIM2_SPIS2_SPI2_IRQHandler
+                0x00000000000051ee                NFCT_IRQHandler
+                0x00000000000051ee                MWU_IRQHandler
+                0x00000000000051ee                COMP_LPCOMP_IRQHandler
  .text.SystemInit
-                0x000000000000528c      0x388 build/ubase/system_nrf52.c.o
-                0x000000000000528c                SystemInit
- .text.exit     0x0000000000005614       0x28 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-exit.o)
-                0x0000000000005614                exit
+                0x00000000000051f0      0x388 build/ubase/system_nrf52.c.o
+                0x00000000000051f0                SystemInit
+ .text.exit     0x0000000000005578       0x28 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-exit.o)
+                0x0000000000005578                exit
  .text.__libc_init_array
-                0x000000000000563c       0x48 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-init.o)
-                0x000000000000563c                __libc_init_array
- .text.memset   0x0000000000005684       0x10 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-memset.o)
-                0x0000000000005684                memset
- .text._exit    0x0000000000005694        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libnosys.a(_exit.o)
-                0x0000000000005694                _exit
+                0x00000000000055a0       0x48 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-init.o)
+                0x00000000000055a0                __libc_init_array
+ .text.memset   0x00000000000055e8       0x10 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-memset.o)
+                0x00000000000055e8                memset
+ .text._exit    0x00000000000055f8        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libnosys.a(_exit.o)
+                0x00000000000055f8                _exit
  *(.init)
- .init          0x0000000000005698        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crti.o
-                0x0000000000005698                _init
- .init          0x000000000000569c        0x8 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtn.o
+ .init          0x00000000000055fc        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crti.o
+                0x00000000000055fc                _init
+ .init          0x0000000000005600        0x8 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtn.o
  *(.fini)
- .fini          0x00000000000056a4        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crti.o
-                0x00000000000056a4                _fini
- .fini          0x00000000000056a8        0x8 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtn.o
+ .fini          0x0000000000005608        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crti.o
+                0x0000000000005608                _fini
+ .fini          0x000000000000560c        0x8 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtn.o
  *crtbegin.o(.ctors)
  *crtbegin?.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o *crtend?.o) .ctors)
@@ -615,49 +615,49 @@ Linker script and memory map
  *(.dtors)
  *(.rodata*)
  .rodata._global_impure_ptr
-                0x00000000000056b0        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-impure.o)
-                0x00000000000056b0                _global_impure_ptr
+                0x0000000000005614        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(lib_a-impure.o)
+                0x0000000000005614                _global_impure_ptr
  *(.eh_frame*)
- .eh_frame      0x00000000000056b4        0x0 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtbegin.o
- .eh_frame      0x00000000000056b4        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtend.o
+ .eh_frame      0x0000000000005618        0x0 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .eh_frame      0x0000000000005618        0x4 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtend.o
 
-.glue_7         0x00000000000056b8        0x0
- .glue_7        0x00000000000056b8        0x0 linker stubs
+.glue_7         0x000000000000561c        0x0
+ .glue_7        0x000000000000561c        0x0 linker stubs
 
-.glue_7t        0x00000000000056b8        0x0
- .glue_7t       0x00000000000056b8        0x0 linker stubs
+.glue_7t        0x000000000000561c        0x0
+ .glue_7t       0x000000000000561c        0x0 linker stubs
 
-.vfp11_veneer   0x00000000000056b8        0x0
- .vfp11_veneer  0x00000000000056b8        0x0 linker stubs
+.vfp11_veneer   0x000000000000561c        0x0
+ .vfp11_veneer  0x000000000000561c        0x0 linker stubs
 
-.v4_bx          0x00000000000056b8        0x0
- .v4_bx         0x00000000000056b8        0x0 linker stubs
+.v4_bx          0x000000000000561c        0x0
+ .v4_bx         0x000000000000561c        0x0 linker stubs
 
-.iplt           0x00000000000056b8        0x0
- .iplt          0x00000000000056b8        0x0 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+.iplt           0x000000000000561c        0x0
+ .iplt          0x000000000000561c        0x0 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtbegin.o
 
 .mem_section_dummy_rom
 
 .log_const_data
-                0x00000000000056b8        0x0
+                0x000000000000561c        0x0
                 [!provide]                        PROVIDE (__start_log_const_data = .)
  *(.log_const_data)
                 [!provide]                        PROVIDE (__stop_log_const_data = .)
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x00000000000056b8                __exidx_start = .
+                0x000000000000561c                __exidx_start = .
 
-.ARM.exidx      0x00000000000056b8        0x8
+.ARM.exidx      0x000000000000561c        0x8
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
- .ARM.exidx     0x00000000000056b8        0x8 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
-                0x00000000000056c0                __exidx_end = .
-                0x00000000000056c0                __etext = .
+ .ARM.exidx     0x000000000000561c        0x8 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/crt0.o
+                0x0000000000005624                __exidx_end = .
+                0x0000000000005624                __etext = .
 
-.rel.dyn        0x00000000000056c0        0x0
- .rel.iplt      0x00000000000056c0        0x0 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtbegin.o
+.rel.dyn        0x0000000000005624        0x0
+ .rel.iplt      0x0000000000005624        0x0 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtbegin.o
 
-.data           0x0000000020000000       0x88 load address 0x00000000000056c0
+.data           0x0000000020000000       0x88 load address 0x0000000000005624
                 0x0000000020000000                __data_start__ = .
  *(vtable)
  *(.data*)
@@ -744,7 +744,7 @@ LOAD /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm
 LOAD /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libnosys.a
 END GROUP
 
-.igot.plt       0x0000000020000088        0x0 load address 0x0000000000005748
+.igot.plt       0x0000000020000088        0x0 load address 0x00000000000056ac
  .igot.plt      0x0000000020000088        0x0 /home/the_3d6/devtools/gcc-arm-none-eabi-8-2018-q4-major/bin/../lib/gcc/arm-none-eabi/8.2.1/thumb/v7e-m+fp/hard/crtbegin.o
                 0x0000000020000088                . = ALIGN (0x4)
 
@@ -756,7 +756,7 @@ END GROUP
  *(.log_dynamic_data)
                 [!provide]                        PROVIDE (__stop_log_dynamic_data = .)
 
-.bss            0x0000000020000088      0x91c load address 0x0000000000005748
+.bss            0x0000000020000088      0x91c load address 0x00000000000056ac
                 0x0000000020000088                . = ALIGN (0x4)
                 0x0000000020000088                __bss_start__ = .
  *(.bss*)
@@ -876,8 +876,8 @@ END GROUP
                 0x0000000020010000                PROVIDE (__stack = __StackTop)
                 0x0000000000000001                ASSERT ((__StackLimit >= __HeapLimit), region RAM overflowed with stack)
                 0x0000000000000088                DataInitFlashUsed = (__bss_start__ - __data_start__)
-                0x00000000000016c0                CodeFlashUsed = (__etext - ORIGIN (FLASH))
-                0x0000000000001748                TotalFlashUsed = (CodeFlashUsed + DataInitFlashUsed)
+                0x0000000000001624                CodeFlashUsed = (__etext - ORIGIN (FLASH))
+                0x00000000000016ac                TotalFlashUsed = (CodeFlashUsed + DataInitFlashUsed)
                 0x0000000000000001                ASSERT ((TotalFlashUsed <= LENGTH (FLASH)), region FLASH overflowed with .data and user data)
 OUTPUT(build/ubase.out elf32-littlearm)
 

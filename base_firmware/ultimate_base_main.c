@@ -64,10 +64,10 @@ void check_uart_packet()
 	if(unproc_length < 0) unproc_length += uart_buf_length;
 	uint8_t *ubuf = get_rx_buf();
 	
-	uint8_t msg_start[16];
-	for(int x = 0; x < 16; x++)
-		msg_start[x] = ubuf[pos+x];
-	uart_send(msg_start, 16);
+//	uint8_t msg_start[16];
+//	for(int x = 0; x < 16; x++)
+//		msg_start[x] = ubuf[pos+x];
+//	uart_send(msg_start, 16);
 	
 	for(uint8_t pp = pos; pp != upos; pp++)
 	{
