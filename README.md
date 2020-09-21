@@ -5,7 +5,8 @@ uECG - very small wearable ECG device that sends raw and processed data over BLE
 
 Project is in active development stage, at the current moment we have shared:
  * schematics and PCB design
- * ECG monitor program for Linux (outdated: might not work properly and will be replaced with cross-platform version soon)
+ * ECG monitor program based on Node.js, cross-platform
+ * ECG monitor program for Linux (outdated: might not work properly, please use cross-platform version instead)
  * Firmware for the main unit, rather stable and reliable build. Next planned major update will cover better beat detection and more robust bpm processing. 
  * Firmware for the base unit that supports uploading uECG firmware via radio
  * Android app with major rework, quite stable now
