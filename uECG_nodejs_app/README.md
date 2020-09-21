@@ -5,7 +5,7 @@ This app at the moment basically duplicates functionality of Android app, but wo
 ## Usage
 
 1. Install Node JS (with npm). The process is quite intuitive and there are plenty of tutorials on how to make it
-2. Download the app
+2. Download the app (git clone, or simply download this folder as a zip and unpack it in convenient place)
 3. Go to the app folder via command line. For this:
   - on Linux and macOS: start the terminal, run series of `cd <folder_name>` commands to get to the folder with downloaded app (where "server.js" file is located)
  - on Windows: start cmd app for accessing command line, if the app folder is not on disk C - run `D:` if it's on D, `E:` if it's on E etc, then run series of `cd <folder_name>` commands to get to the folder with downloaded app (where "server.js" file is located)
