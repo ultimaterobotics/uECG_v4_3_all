@@ -1,0 +1,1082 @@
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+
+<style>
+	canvas {
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+	.chart-container_1 {
+		width: 800px;
+		margin-left: 40px;
+		margin-right: 40px;
+	}
+	.chart-container_2 {
+		width: 300px;
+		margin-left: 40px;
+		margin-right: 40px;
+	}
+	.container {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+p {
+  color: #00AA00;
+}
+</style>
+</head>
+
+<script>
+
+chart_names = ['ecg', 'poincare', 'bpm', 'hrv', 'gsr', 'steps', 'accel', 'temp', 'batt'];
+
+function adaptive_round(x)
+{
+	if(Math.abs(Math.round(x) - x) < 0.05) return Math.round(x);
+	if(Math.abs(Math.round(10*x) - 10*x) < 0.05) return Math.round(10*x)/10;
+	return Math.round(100*x)/100;
+}
+
+function round3(x)
+{
+	return Math.round(1000*x)/1000;
+}
+
+var ecg_data = [];
+var ecg_draw_data = [];
+var ecg_data_t = [];
+var bpm_data = [];
+
+var save_ecg_lines = [];
+var save_data_lines = [];
+var save_rr_lines = [];
+
+var save_on = 0;
+var saving_ecg = 0;
+var saving_data = 0;
+var saving_rr = 0;
+var save_start_time = 0;
+
+var update_rate = 4;
+var history_pos = 0;
+var max_history_len = 12*3600*update_rate;
+var bpm_history = [];
+var hrv_history = [];
+var gsr_history = [];
+var step_rate_history = [];
+var temp_history = [];
+var batt_history = [];
+var acc_x_history = [];
+var acc_y_history = [];
+var acc_z_history = [];
+
+var rr_history_pos = 0;
+var rr_prev_id = -1;
+var rr_cur_history = [];
+var rr_prev_history = [];
+
+class PixChart {
+constructor(pix_size_X, pix_size_Y, start_X, start_Y, type, scaling)
+{
+	this.SX = pix_size_X;
+	this.SY = pix_size_Y;
+	this.DX = start_X;
+	this.DY = start_Y;
+	this.type = type;
+	this.scaling = scaling;
+	this.data_count = 0;
+	this.gap_time = 0;
+	this.in_gap = 0;
+
+//in case if not properly defined later:
+	this.val_max = 1;
+	this.val_min = 0;
+	this.val_range = 1;
+	this.val_max2 = 1;
+	this.val_min2 = 0;
+	this.val_range2 = 1;
+}
+set_view_params(back_color, axis_color, line_color, line_width)
+{
+	this.back_color = back_color;
+	this.axis_color = axis_color;
+	this.line_color = line_color;
+	this.line_width = line_width;
+}
+set_additional_colors(color_set)
+{
+	this.more_line_colors = color_set;
+}
+set_axis_params(draw_x, draw_y, mesh_x, mesh_y, label_x, label_y)
+{
+	this.mesh_Xstep = mesh_x;
+	this.mesh_Ystep = mesh_y;
+	this.draw_axis_x = draw_x;
+	this.draw_axis_y = draw_y;
+	this.label_x = label_x;
+	this.label_y = label_y;
+}
+set_gap(gap_time)
+{
+	this.gap_time = gap_time;
+}
+set_data_params(time_range, data_rate) //time in seconds, rate in Hz
+{
+	this.time_range = time_range;
+	this.data_rate = data_rate;
+	this.screen_points = Math.floor((this.gap_time + time_range) * data_rate);
+}
+set_scaling_params(min_value, max_value, scaling_type)
+{
+	this.val_max = max_value;
+	this.val_min = min_value;
+	this.val_range = this.val_max - this.val_min;
+	this.scaling = scaling_type;
+}
+set_scaling_params2(min_value2, max_value2)
+{
+	this.val_max2 = max_value2;
+	this.val_min2 = min_value2;
+	this.val_range2 = this.val_max2 - this.val_min2;
+}
+time_to_x(tim)
+{
+	if(isNaN(tim)) return 0;
+	if(this.type == "simple")
+	{
+		return this.DX + this.SX * tim / this.time_range;
+	}
+	if(this.type == "dynamic")
+	{
+		return this.DX + this.SX * (1 - tim / this.time_range);
+	}
+	if(this.type == "cycle")
+	{
+//		var data_pos = this.data_count;//Math.floor(this.data_count * this.data_rate);	
+		this.in_gap = 0;
+		var offset_rel = (this.data_count % this.screen_points) / this.screen_points;
+		var pix_pos = this.SX * tim / (this.time_range + this.gap_time);
+		if(tim / (this.time_range + this.gap_time) > this.time_range / (this.time_range + this.gap_time)) this.in_gap = 1;
+		var res_pix = offset_rel * this.SX - pix_pos;
+		if(res_pix < 0) res_pix += this.SX;
+		return this.DX + res_pix;
+	}
+}
+val_to_y(val)
+{
+	var ret = this.DY + this.SY * (1 - (val - this.val_min) / this.val_range);
+	if(isNaN(ret)) return 0;
+	return ret;
+}
+val_to_x(val)
+{
+	var ret = this.DX + this.SX * ((val - this.val_min2) / this.val_range2);
+	if(isNaN(ret)) return 0;
+	return ret;
+}
+drawXY(ctx, data_x, data_y)
+{
+	ctx.fillStyle=this.back_color;
+	ctx.fillRect(this.DX, this.DY, this.SX, this.SY);
+
+	var val_avg = 0;
+	var val_avg2 = 0;
+	if(this.scaling == "auto")
+	{
+		this.val_min = data_x[0];
+		this.val_max = data_x[0];
+		this.val_min2 = data_y[0];
+		this.val_max2 = data_y[0];
+		var avg_zz = 1;
+		for(var x = 0; x < data.length; x++)
+		{
+			var tt = x / this.data_rate;
+			if(tt > this.time_range) break;
+			if(data_x[x] > this.val_max2) this.val_max2 = data_x[x];
+			if(data_x[x] < this.val_min2) this.val_min2 = data_x[x];
+			val_avg2 += data_x[x];
+
+			if(data_y[x] > this.val_max) this.val_max = data_y[x];
+			if(data_y[x] < this.val_min) this.val_min = data_y[x];
+			val_avg += data_y[x];
+			avg_zz++;
+		}
+		val_avg /= avg_zz;
+		val_avg2 /= avg_zz;
+		this.val_max += 0.01;
+		this.val_min -= 0.01;
+		this.val_range = this.val_max - this.val_min;
+
+		this.val_max2 += 0.01;
+		this.val_min2 -= 0.01;
+		this.val_range2 = this.val_max2 - this.val_min2;
+	}
+
+	ctx.beginPath();
+	ctx.strokeStyle=this.axis_color;
+	ctx.lineWidth = 1;
+	var text_size = 15;
+	ctx.font = text_size +"px Arial";
+	ctx.fillStyle = this.axis_color;
+	if(this.draw_axis_x)
+	{
+		ctx.moveTo(this.DX, this.DY + this.SY);
+		ctx.lineTo(this.DX + this.SX, this.DY + this.SY);
+	}
+	if(this.draw_axis_y)
+	{
+		ctx.moveTo(this.DX, this.DY + this.SY);
+		ctx.lineTo(this.DX, this.DY);
+	}
+	if(this.draw_axis_x && this.draw_axis_y)
+	{
+		ctx.moveTo(this.DX, this.DY + this.SY);
+		ctx.lineTo(this.DX + this.SX, this.DY);
+	}
+
+	if(this.mesh_Xstep > 0)
+	{
+		for(var vv = this.val_min2; vv < this.val_max2; vv += this.mesh_Xstep)
+		{
+			var xx = this.val_to_x(vv);//this.DY + this.SY * (1 - vv / this.val_range);
+			ctx.moveTo(this.DX + xx, this.DY);
+			ctx.lineTo(this.DX + xx, this.DY + this.SY);
+			if(this.label_x == true)
+				ctx.fillText(adaptive_round(vv), this.DX + xx + text_size/2, this.DY + this.SY - text_size/4);
+		}
+	}
+	if(this.mesh_Ystep > 0)
+	{
+		for(var vv = this.val_min; vv < this.val_max; vv += this.mesh_Ystep)
+		{
+			var yy = this.val_to_y(vv);//this.DY + this.SY * (1 - vv / this.val_range);
+			ctx.moveTo(this.DX, this.DY + yy);
+			ctx.lineTo(this.DX + this.SX, this.DY + yy);
+			if(this.label_y == true)
+				ctx.fillText(adaptive_round(vv), this.DX + text_size/2, this.DY + yy - text_size/4);
+		}
+	}
+	ctx.stroke();
+
+
+	ctx.fillStyle=this.line_color;
+//	ctx.lineWidth = this.line_width;
+	for(var x = 0; x < data.length; x++)
+	{
+		var xx = this.val_to_x(data_x[x]);
+		var yy = this.val_to_y(data_y[x]);
+		ctx.fillRect(this.DX + xx, this.DY + yy, this.line_width, this.line_width);
+	}
+}
+draw(ctx, data)
+{
+	if(this.type == "XY") return;
+	ctx.fillStyle=this.back_color;
+	ctx.fillRect(this.DX, this.DY, this.SX, this.SY);
+
+	var val_avg = 0;
+	if(this.scaling == "auto")
+	{
+		this.val_min = data[0];
+		this.val_max = data[0];
+		var avg_zz = 1;
+		for(var x = 0; x < data.length; x++)
+		{
+			var tt = x / this.data_rate;
+			if(tt > this.time_range) break;
+			if(data[x] > this.val_max) this.val_max = data[x];
+			if(data[x] < this.val_min) this.val_min = data[x];
+			val_avg += data[x];
+			avg_zz++;
+		}
+		val_avg /= avg_zz;
+		this.val_max += 0.01;
+		this.val_min -= 0.01;
+		this.val_range = this.val_max - this.val_min;
+	}
+
+	ctx.beginPath();
+	ctx.strokeStyle=this.axis_color;
+	ctx.lineWidth = 1;
+	var text_size = 15;
+	ctx.font = text_size +"px Arial";
+	ctx.fillStyle = this.axis_color;
+	if(this.draw_axis_x)
+	{
+		ctx.moveTo(this.DX, this.DY + this.SY);
+		ctx.lineTo(this.DX + this.SX, this.DY + this.SY);
+	}
+	if(this.draw_axis_y)
+	{
+		ctx.moveTo(this.DX, this.DY + this.SY);
+		ctx.lineTo(this.DX, this.DY);
+	}
+	if(this.mesh_Xstep > 0)
+	{
+		for(var tm = 0; tm < this.time_range; tm += this.mesh_Xstep)
+		{
+			var xx = tm / this.time_range * this.SX;
+			ctx.moveTo(this.DX + xx, this.DY + this.SY);
+			ctx.lineTo(this.DX + xx, this.DY);
+			if(this.label_x && tm > 0)
+				ctx.fillText(adaptive_round(this.time_range - tm), this.DX + xx, this.DY + this.SY - text_size/2);
+		}
+	}
+	if(this.mesh_Ystep > 0)
+	{
+		if(this.scaling == "auto" && this.mesh_Ystep*20 > this.val_range)
+		{
+			for(var vv = val_avg; vv < this.val_max; vv += this.mesh_Ystep)
+			{
+				var yy = this.val_to_y(vv);//this.DY + this.SY * (1 - vv / this.val_range);
+				ctx.moveTo(this.DX, this.DY + yy);
+				ctx.lineTo(this.DX + this.SX, this.DY + yy);
+			}
+			for(var vv = val_avg; vv > this.val_min; vv -= this.mesh_Ystep)
+			{
+				var yy = this.val_to_y(vv);//this.DY + this.SY * (1 - vv / this.val_range);
+				ctx.moveTo(this.DX, this.DY + yy);
+				ctx.lineTo(this.DX + this.SX, this.DY + yy);
+			}
+		}
+		if(this.scaling == "manual")
+		{
+			for(var vv = this.val_min; vv < this.val_max; vv += this.mesh_Ystep)
+			{
+				var yy = this.val_to_y(vv);//this.DY + this.SY * (1 - vv / this.val_range);
+				ctx.moveTo(this.DX, this.DY + yy);
+				ctx.lineTo(this.DX + this.SX, this.DY + yy);
+				if(this.label_y == true)
+					ctx.fillText(adaptive_round(vv), this.DX + text_size/2, this.DY + yy - text_size/4);
+			}
+		}
+	}
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.strokeStyle = this.line_color;
+	ctx.lineWidth = this.line_width;
+	var prev_xx;
+	var pixstep = this.SX / this.screen_points;
+//	if(pixstep < 1) pixstep = 1;
+	for(var fx = 0; fx < data.length; fx += pixstep)
+	{
+		var x = Math.floor(fx);
+		var tt = x / this.data_rate;
+		if(tt > this.time_range) break;
+		var xx = this.time_to_x(tt);
+		var yy = this.val_to_y(data[x]);
+		if(x == 0)
+		{
+			ctx.moveTo(xx, yy);
+			prev_xx = xx;
+			continue;
+		}
+		if(this.in_gap) ctx.moveTo(xx, yy);
+		if(prev_xx - xx > 100 || prev_xx - xx < -100) ctx.moveTo(xx, yy);
+		ctx.lineTo(xx, yy);
+		prev_xx = xx;
+	}
+
+	ctx.stroke();
+}
+draw_over(ctx, data, color_id)
+{
+	if(this.type == "XY") return;
+
+	var val_avg = 0;
+	if(this.scaling == "auto")
+	{
+		this.val_min = data[0];
+		this.val_max = data[0];
+		var avg_zz = 1;
+		for(var x = 0; x < data.length; x++)
+		{
+			var tt = x / this.data_rate;
+			if(tt > this.time_range) break;
+			if(data[x] > this.val_max) this.val_max = data[x];
+			if(data[x] < this.val_min) this.val_min = data[x];
+			val_avg += data[x];
+			avg_zz++;
+		}
+		val_avg /= avg_zz;
+		this.val_max += 0.01;
+		this.val_min -= 0.01;
+		this.val_range = this.val_max - this.val_min;
+	}
+
+	ctx.beginPath();
+	ctx.strokeStyle = this.more_line_colors[color_id];
+	ctx.lineWidth = this.line_width;
+	var prev_xx;
+	var pixstep = this.SX / this.screen_points;
+//	if(pixstep < 1) pixstep = 1;
+	for(var fx = 0; fx < data.length; fx += pixstep)
+	{
+		var x = Math.floor(fx);
+		var tt = x / this.data_rate;
+		if(tt > this.time_range) break;
+		var xx = this.time_to_x(tt);
+		var yy = this.val_to_y(data[x]);
+		if(x == 0)
+		{
+			ctx.moveTo(xx, yy);
+			prev_xx = xx;
+			continue;
+		}
+		if(this.in_gap) ctx.moveTo(xx, yy);
+		if(prev_xx - xx > 100 || prev_xx - xx < -100) ctx.moveTo(xx, yy);
+
+//		if(prev_xx - xx > 3 || prev_xx - xx < -3) ctx.moveTo(xx, yy);
+		ctx.lineTo(xx, yy);
+		prev_xx = xx;
+	}
+
+	ctx.stroke();
+}
+
+}
+
+var ecg_screen_time = 3.0;
+var ecg_gap_size = 0.1;
+var ecg_data_rate = 976;
+
+var frame_id = -1;
+var prev_data_id = -1;
+
+ecg_chart = {};
+poincare_chart = {};
+bpm_chart = {};
+hrv_chart = {};
+gsr_chart = {};
+steps_chart = {};
+accel_chart = {};
+temp_chart = {};
+batt_chart = {};
+
+var ecg_time = 5.0;
+var bpm_time = 300.0;
+
+function draw_ecg()
+{
+	var ctx = document.getElementById("chart_ecg").getContext('2d');
+	ecg_chart.draw(ctx, ecg_data);
+}
+
+function ecg_scroll(evt)
+{
+	evt.preventDefault();
+	if(evt.deltaY < 0) //zoom in
+	{
+		ecg_time *= 0.95;
+		if(ecg_time < 0.4) ecg_time = 0.4;
+		ecg_chart.gap_time = ecg_time * 0.08;
+		ecg_chart.set_data_params(ecg_time, 976);
+//		var ww = document.getElementById("chart_ecg").width;
+//		document.getElementById("chart_ecg").width = ww*0.95;
+//		ecg_chart.SX = ww;
+	}
+	else
+	{
+		ecg_time *= 1.05;
+		if(ecg_time > 10) ecg_time = 10;
+		ecg_chart.gap_time = ecg_time * 0.08;
+		ecg_chart.set_data_params(ecg_time, 976);
+//		var ww = document.getElementById("chart_ecg").width;
+//		document.getElementById("chart_ecg").width = ww*1.05;
+//		ecg_chart.SX = ww;
+
+	}
+}
+
+function other_scroll(evt)
+{
+	evt.preventDefault();
+	if(evt.deltaY < 0) //zoom in
+	{
+		bpm_time *= 0.9;
+		if(bpm_time < 60) bpm_time = 60;
+		bpm_chart.set_data_params(bpm_time, update_rate);
+		hrv_chart.set_data_params(bpm_time, update_rate);
+		gsr_chart.set_data_params(bpm_time, update_rate);
+		steps_chart.set_data_params(bpm_time, update_rate);
+		accel_chart.set_data_params(bpm_time, update_rate);
+		temp_chart.set_data_params(bpm_time, update_rate);
+		batt_chart.set_data_params(bpm_time, update_rate);
+	}
+	else
+	{
+		bpm_time *= 1.1;
+		if(bpm_time > 8*3600) bpm_time = 8*3600;
+		bpm_chart.set_data_params(bpm_time, update_rate);
+		hrv_chart.set_data_params(bpm_time, update_rate);
+		gsr_chart.set_data_params(bpm_time, update_rate);
+		steps_chart.set_data_params(bpm_time, update_rate);
+		accel_chart.set_data_params(bpm_time, update_rate);
+		temp_chart.set_data_params(bpm_time, update_rate);
+		batt_chart.set_data_params(bpm_time, update_rate);
+	}
+}
+
+
+function draw_stuff()
+{
+	bpm_chart.draw(document.getElementById("chart_bpm").getContext('2d'), bpm_history);
+	hrv_chart.draw(document.getElementById("chart_hrv").getContext('2d'), hrv_history);
+	gsr_chart.draw(document.getElementById("chart_gsr").getContext('2d'), gsr_history);
+	steps_chart.draw(document.getElementById("chart_steps").getContext('2d'), step_rate_history);
+	accel_chart.draw(document.getElementById("chart_accel").getContext('2d'), acc_x_history);
+	accel_chart.draw_over(document.getElementById("chart_accel").getContext('2d'), acc_y_history, 0);
+	accel_chart.draw_over(document.getElementById("chart_accel").getContext('2d'), acc_z_history, 1);
+	temp_chart.draw(document.getElementById("chart_temp").getContext('2d'), temp_history);
+	batt_chart.draw(document.getElementById("chart_batt").getContext('2d'), batt_history);
+
+	poincare_chart.drawXY(document.getElementById("chart_poincare").getContext('2d'), rr_cur_history, rr_prev_history);
+}
+
+function init_charts()
+{
+	for(var x = 0; x < 720; x++)
+		ecg_data.push(0);
+
+	document.getElementById("cdiv_ecg").addEventListener("wheel", ecg_scroll, true);
+	chart_elem = document.getElementById("chart_ecg");
+	ecg_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "cycle", "auto");
+	//0.57220459 uV per 1 unit
+	ecg_chart.set_view_params('#000000', '#50A0A0', '#00FF00', 2);
+	ecg_chart.set_axis_params(true, true, 0.2, 1000*0.57220459, false, false);
+	ecg_chart.set_gap(0.5);
+	ecg_time = 5.0;
+	ecg_chart.set_data_params(ecg_time, 976); //time in seconds, rate in Hz
+
+	chart_elem = document.getElementById("chart_bpm");
+	chart_elem.addEventListener("wheel", other_scroll, true);
+	bpm_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "dynamic", "manual");
+	bpm_chart.set_view_params('#000000', '#50A0A0', '#00FF00', 2);
+	bpm_chart.set_axis_params(true, true, 60, 30, false, true);
+	bpm_chart.set_scaling_params(40, 200, "manual");
+	bpm_time = 300.0;
+	bpm_chart.set_data_params(bpm_time, update_rate); //time in seconds, rate in Hz
+
+	chart_elem = document.getElementById("chart_hrv");
+	chart_elem.addEventListener("wheel", other_scroll, true);
+	hrv_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "dynamic", "manual");
+	hrv_chart.set_view_params('#000000', '#50A0A0', '#00FF00', 2);
+	hrv_chart.set_axis_params(true, true, 60, 0.1, false, true);
+	hrv_chart.set_scaling_params(0.9, 1.3, "manual");
+	hrv_time = 300.0;
+	hrv_chart.set_data_params(hrv_time, update_rate); //time in seconds, rate in Hz
+
+	chart_elem = document.getElementById("chart_gsr");
+	chart_elem.addEventListener("wheel", other_scroll, true);
+	gsr_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "dynamic", "manual");
+	gsr_chart.set_view_params('#000000', '#50A0A0', '#00FF00', 2);
+	gsr_chart.set_axis_params(true, true, 60, 50, false, true);
+	gsr_chart.set_scaling_params(0.9, 1.3, "auto");
+	gsr_time = 300.0;
+	gsr_chart.set_data_params(gsr_time, update_rate); //time in seconds, rate in Hz
+
+	chart_elem = document.getElementById("chart_steps");
+	chart_elem.addEventListener("wheel", other_scroll, true);
+	steps_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "dynamic", "manual");
+	steps_chart.set_view_params('#000000', '#50A0A0', '#00FF00', 2);
+	steps_chart.set_axis_params(true, true, 60, 0.5, false, true);
+	steps_chart.set_scaling_params(0.0, 2.0, "manual");
+	steps_time = 300.0;
+	steps_chart.set_data_params(steps_time, update_rate); //time in seconds, rate in Hz
+
+	chart_elem = document.getElementById("chart_accel");
+	chart_elem.addEventListener("wheel", other_scroll, true);
+	accel_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "dynamic", "manual");
+	accel_chart.set_view_params('#000000', '#50A0A0', '#FF5040', 2);
+	accel_chart.set_additional_colors(['#90BB40', '#4050FF']);
+	accel_chart.set_axis_params(true, true, 60, 2.5, false, false);
+	accel_chart.set_scaling_params(-15.0, 15.0, "auto");
+	accel_time = 300.0;
+	accel_chart.set_data_params(accel_time, update_rate); //time in seconds, rate in Hz
+
+	chart_elem = document.getElementById("chart_temp");
+	chart_elem.addEventListener("wheel", other_scroll, true);
+	temp_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "dynamic", "manual");
+	temp_chart.set_view_params('#000000', '#50A0A0', '#00FF00', 2);
+	temp_chart.set_axis_params(true, true, 60, 2.0, false, true);
+	temp_chart.set_scaling_params(30.0, 45.0, "manual");
+	temp_time = 300.0;
+	temp_chart.set_data_params(temp_time, update_rate); //time in seconds, rate in Hz
+
+	chart_elem = document.getElementById("chart_batt");
+	chart_elem.addEventListener("wheel", other_scroll, true);
+	batt_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "dynamic", "manual");
+	batt_chart.set_view_params('#000000', '#50A0A0', '#00FF00', 2);
+	batt_chart.set_axis_params(true, true, 60, 300.0, false, true);
+	batt_chart.set_scaling_params(3000.0, 4300.0, "manual");
+	batt_time = 300.0;
+	batt_chart.set_data_params(batt_time, update_rate); //time in seconds, rate in Hz
+
+
+	chart_elem = document.getElementById("chart_poincare");
+	poincare_chart = new PixChart(chart_elem.width, chart_elem.height, 0, 0, "XY", "manual");
+	poincare_chart.set_view_params('#000000', '#50A0A0', '#00FF00', 2);
+	poincare_chart.set_axis_params(true, true, 100, 100, true, true);
+	poincare_chart.set_scaling_params(200, 1600, "manual");
+	poincare_chart.set_scaling_params2(200, 1600);
+}
+
+function save_file_data(data, filename) {
+	var type = 'text/plain';
+	var file = new Blob([data], {type: type});
+	if (window.navigator.msSaveOrOpenBlob) // IE10+
+		window.navigator.msSaveOrOpenBlob(file, filename);
+	else { // Others
+	var a = document.createElement("a");
+	var url = URL.createObjectURL(file);
+	a.href = url;
+	a.download = filename;
+	document.body.appendChild(a);
+	a.click();
+	setTimeout(function() {
+		document.body.removeChild(a);
+		window.URL.revokeObjectURL(url);  
+	}, 10); 
+    }
+}
+
+function update_save_chk()
+{
+	saving_ecg = 0;
+	if(document.getElementById("save_ecg").checked) saving_ecg = 1;
+	saving_data = 0;
+	if(document.getElementById("save_data").checked) saving_data = 1;
+	saving_rr = 0;
+	if(document.getElementById("save_rr").checked) saving_rr = 1;
+}
+function toggle_save()
+{
+	if(save_on == 0)
+	{
+		save_start_time = new Date().getTime();
+		document.getElementById("btn_save").value = "Stop record";
+		if(document.getElementById("save_ecg").checked) saving_ecg = 1;
+		if(document.getElementById("save_data").checked) saving_data = 1;
+		if(document.getElementById("save_rr").checked) saving_rr = 1;
+		save_ecg_lines = [];
+		save_data_lines = [];
+		save_rr_lines = [];
+		save_on = 1;
+	}
+	else
+	{
+		var d = new Date();
+		var tstamp = d.getHours() + "_" + d.getMinutes() + "_" + d.getSeconds() + "__" + d.getDate() + "_" + d.getMonth() + "_" + d.getYear();
+		if(saving_ecg)
+			save_file_data(save_ecg_lines, "ecg_rec_" + tstamp + ".csv");
+		if(saving_data)
+			save_file_data(save_data_lines, "data_rec_" + tstamp + ".csv");
+		if(saving_rr)
+			save_file_data(save_rr_lines, "rr_rec_" + tstamp + ".csv");
+		document.getElementById("btn_save").value = "Start record";
+		save_on = 0;
+	}
+}
+
+function parse_ecg_data(buf, status)
+{
+  data = JSON.parse(buf);
+  var data_id = data[0];
+  if(prev_data_id < 0)
+  {
+    if(data_id > data.length)
+      prev_data_id = data_id - data.length;
+    else
+      prev_data_id = 0;
+  }
+  var d_id = data_id - prev_data_id;
+  if(d_id > 1000) d_id = 1000; //in case if UI was long frozen for some reason
+  var tot_len = ecg_data.length + d_id;
+  if(tot_len > 10000)
+    ecg_data = ecg_data.slice(0, 10000);
+  var pad_count = 0;
+  if(d_id > data.length)
+  {
+    var padding = [];
+    padding.fill(0, d_id - data.length, ecg_data[0]);
+    pad_count = d_id - data.length;
+    data = padding.concat(data);
+  }
+  var dat_new = data.slice(data.length-d_id, data.length);
+
+	if(saving_ecg && save_on)
+	{
+		var tim = new Date().getTime() - save_start_time;
+		for(var x = 0; x < dat_new.length; x++)
+		{
+			var is_ok = 1;
+			if(x < pad_count) is_ok = 0;
+			save_ecg_lines = save_ecg_lines + tim + ";" + dat_new[x] + ";" + is_ok + "\n";
+		}
+	}
+
+  dat_new.reverse();
+  ecg_data = dat_new.concat(ecg_data);
+  prev_data_id = data_id;
+  ecg_chart.data_count += dat_new.length;
+
+  draw_ecg();
+}
+
+function parse_history_data(buf, status)
+{
+	uecg_hist = JSON.parse(buf);
+	if(uecg_hist.hist_pos === undefined) return;
+	if(uecg_hist.hist_pos_rr === undefined) return;
+	console.log("got new pos " + uecg_hist.hist_pos);
+	if(history_pos != uecg_hist.hist_pos)
+	{
+		if(saving_data && save_on)
+		{
+			var tim = new Date().getTime() - save_start_time;
+			for(var x = 0; x < uecg_hist.h_bpm.length; x++)
+			{
+				save_data_lines = save_data_lines + tim + ";" + uecg_hist.h_bpm[x] + ";" 
+									+ round3(uecg_hist.h_hrv[x]) + ";"  + round3(uecg_hist.h_gsr[x]) + ";" 
+									+ round3(uecg_hist.h_step_rate[x]) + ";"  + uecg_hist.h_temp[x] + ";" 
+									+ uecg_hist.h_batt[x] + ";"  + uecg_hist.h_acc_x[x] + ";" 
+									+ uecg_hist.h_acc_y[x] + ";"  + uecg_hist.h_acc_z[x] + "\n";
+			}
+		}
+
+		bpm_history = uecg_hist.h_bpm.concat(bpm_history);
+		hrv_history = uecg_hist.h_hrv.concat(hrv_history);
+		gsr_history = uecg_hist.h_gsr.concat(gsr_history);
+		step_rate_history = uecg_hist.h_step_rate.concat(step_rate_history);
+		temp_history = uecg_hist.h_temp.concat(temp_history);
+		batt_history = uecg_hist.h_batt.concat(batt_history);
+		acc_x_history = uecg_hist.h_acc_x.concat(acc_x_history);
+		acc_y_history = uecg_hist.h_acc_y.concat(acc_y_history);
+		acc_z_history = uecg_hist.h_acc_z.concat(acc_z_history);
+	}
+	if(rr_history_pos != uecg_hist.hist_pos_rr)
+	{
+		rr_cur_history = uecg_hist.h_rr_cur.concat(rr_cur_history);
+		rr_prev_history = uecg_hist.h_rr_prev.concat(rr_prev_history);
+
+		if(saving_rr && save_on)
+		{
+			console.log("save rr cnt:" + uecg_hist.h_rr_cur.length);
+			var tim = new Date().getTime() - save_start_time;
+			for(var x = 0; x <  uecg_hist.h_rr_cur.length; x++)
+			{
+				save_rr_lines = save_rr_lines + tim + ";" + uecg_hist.h_rr_cur[x] + ";" + uecg_hist.h_rr_prev[x] + ";"
+									+ bpm_history[0] + ";" 
+									+ round3(hrv_history[0]) + ";"  + round3(gsr_history[0]) + ";" 
+									+ round3(step_rate_history[0]) + ";"  + temp_history[0] + ";" 
+									+ batt_history[0] + ";"  + acc_x_history[0] + ";" 
+									+ acc_y_history[0] + ";"  + acc_z_history[0] + " \n";
+			}
+		}
+
+	}
+
+	history_pos = uecg_hist.hist_pos;
+	rr_history_pos = uecg_hist.hist_pos_rr;
+
+	draw_stuff();
+}
+
+function parse_current_data(buf, status)
+{
+  data = JSON.parse(buf);
+  if(data.bpm !== undefined)
+  {
+    if(bpm_data.length > 50) bpm_data.shift();
+    bpm_data.push(data.bpm);
+    document.getElementById("BPM").innerHTML = "BPM: " + data.bpm;
+  }
+  if(data.battery_mv !== undefined)
+    document.getElementById("battery_level").innerHTML = "Battery: " + data.battery_mv + " mV";
+}
+
+var in_pause = 0;
+
+function poll_ecg_data() 
+{ 
+	if(in_pause == 0)
+	{
+//		console.log('poll_send');
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == XMLHttpRequest.DONE ) 
+				parse_ecg_data(xmlhttp.responseText, xmlhttp.status) 
+		};
+		xmlhttp.open('GET', '/get-ecg-data', true);
+		xmlhttp.send(); 
+	}
+	setTimeout(function() { poll_ecg_data(); }, 50);
+}
+
+function poll_history_data() 
+{ 
+	if(in_pause == 0)
+	{
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == XMLHttpRequest.DONE ) 
+				parse_history_data(xmlhttp.responseText, xmlhttp.status) 
+		};
+		xmlhttp.open('GET', '/get-params-history?hist_id=' + history_pos + '&rr_hist_id=' + rr_history_pos, true);
+		xmlhttp.send(); 
+	}
+	setTimeout(function() { poll_history_data(); }, 341);
+}
+
+function poll_current_data() 
+{ 
+	if(in_pause == 0)
+	{
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == XMLHttpRequest.DONE ) 
+				parse_current_data(xmlhttp.responseText, xmlhttp.status) 
+		};
+		xmlhttp.open('GET', '/get-ecg-object', true);
+		xmlhttp.send(); 
+	}
+	setTimeout(function() { poll_current_data(); }, 317);
+}
+
+function resize_charts()
+{
+	var w = window.innerWidth;
+	var h = window.innerHeight;
+	for(var n = 0; n < chart_names.length; n++)
+	{
+		document.getElementById("chart_" + chart_names[n]).width = w - 50;
+		document.getElementById("chart_" + chart_names[n]).height = h*0.45;
+		if(chart_names[n] == 'ecg')
+			document.getElementById("chart_" + chart_names[n]).height = h*0.7;
+		if(chart_names[n] == 'poincare')
+		{
+			document.getElementById("chart_" + chart_names[n]).height = h*1.1;
+			document.getElementById("chart_" + chart_names[n]).width = h*1.1;
+		}
+	}
+}
+
+function update_visible()
+{
+	for(var n = 0; n < chart_names.length; n++)
+	{
+		if(document.getElementById("use_" + chart_names[n]).checked)
+			document.getElementById("cdiv_" + chart_names[n]).style.display='initial';
+		else
+			document.getElementById("cdiv_" + chart_names[n]).style.display='none';
+	}
+}
+
+function show_fw_upload()
+{
+	document.getElementById('fw_upload').style.display='inline';
+	document.getElementById('fw_upload_label').innerHTML="Firmware upload";
+	window.scrollTo(0,document.body.scrollHeight);
+}
+
+window.onload = function() {
+	resize_charts();
+	init_charts();
+	update_visible();
+	poll_ecg_data();
+	poll_current_data();
+	poll_history_data();
+	document.getElementById('base-file').addEventListener('change', read_file_base, false);
+	document.getElementById('uecg-file').addEventListener('change', read_file_uecg, false);
+	document.getElementById('fw_upload_label').addEventListener('click', show_fw_upload);
+}
+
+function togglePause()
+{
+	if(in_pause == 0)
+	{
+		document.getElementById('bt_pause').innerHTML = "resume";
+		in_pause = 1;
+	}
+	else
+	{
+		document.getElementById('bt_pause').innerHTML = "pause";
+		in_pause = 0;
+	}
+}
+
+var in_base_fw_upload = 0;
+var in_uecg_fw_upload = 0;
+var upload_progress = 0;
+
+function upload_progress_update() 
+{ 
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == XMLHttpRequest.DONE )
+		{
+			res = JSON.parse(xmlhttp.responseText);
+			if(res.progress !== undefined)
+			{
+				upload_progress = res.progress;
+				if(in_uecg_fw_upload)
+				{
+					document.getElementById("uecg_upload_bar").style.width = Math.floor(100*res.progress) + "%";
+					document.getElementById("uecg_upload_progress").style.display = "inline";
+				}
+				if(in_base_fw_upload)
+				{
+					document.getElementById("base_upload_bar").style.width = Math.floor(100*res.progress) + "%";
+					document.getElementById("base_upload_progress").style.display = "inline";
+				}
+			}
+		}
+	};
+	xmlhttp.open('GET', '/get-fw-upload-progress', true);
+	xmlhttp.setRequestHeader('Content-Type', 'text/html');
+	xmlhttp.send(); 
+
+	console.log("upload progress:");
+	console.log(upload_progress);
+	if(upload_progress < 0.99)
+		setTimeout(function() { upload_progress_update(); }, 200);
+	else
+		in_pause = 0;
+}
+
+function process_base_fw_upload(buf)
+{
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "/upload-base-fw", true);
+
+	xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+	xhr.send(buf);
+
+//	xhr.setRequestHeader('Content-Type', 'application/json');
+//	xhr.send(JSON.stringify({ bin_data: buf}));
+
+	xhr.onload = function() {
+		console.log("result:")
+		console.log(this.responseText); }
+
+	console.log("base file read: length " + buf.byteLength);
+	console.log(buf);
+	in_pause = 1;
+	in_base_fw_upload = 1;
+	in_uecg_fw_upload = 0;
+	upload_progress = 0;
+	setTimeout(function() { upload_progress_update(); }, 200);
+}
+
+function process_uecg_fw_upload(buf)
+{
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "/upload-uecg-fw", true);
+
+	xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+	xhr.send(buf);
+
+	xhr.onload = function() {
+		console.log("result:")
+		console.log(this.responseText); }
+
+	console.log("base file read: length " + buf.byteLength);
+	console.log(buf);
+
+	in_pause = 1;
+	in_uecg_fw_upload = 1;
+	in_base_fw_upload = 0;
+	upload_progress = 0;
+	setTimeout(function() { upload_progress_update(); }, 200);
+}
+
+function read_file_base(e, type) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    process_base_fw_upload(contents);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function read_file_uecg(e, type) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var contents = e.target.result;
+    process_uecg_fw_upload(contents);
+  };
+  reader.readAsArrayBuffer(file);
+}
+</script>
+
+
+<body bgcolor="#111111" font='color="#00AA00"'>
+<div style="color:#00AA00">
+Show charts:
+<input type="checkbox" checked="true" id="use_ecg" onclick="update_visible()">ECG</input>
+<input type="checkbox" id="use_poincare" onclick="update_visible()">Poincare</input>
+<input type="checkbox" checked="true" id="use_bpm" onclick="update_visible()">BPM</input>
+<input type="checkbox" checked="true" id="use_hrv" onclick="update_visible()">HRV</input>
+<input type="checkbox" id="use_gsr" onclick="update_visible()">GSR</input>
+<input type="checkbox" id="use_steps" onclick="update_visible()">Steps</input>
+<input type="checkbox" id="use_accel" onclick="update_visible()">Acceleration</input>
+<input type="checkbox" id="use_temp" onclick="update_visible()">Temperature</input>
+<input type="checkbox" id="use_batt" onclick="update_visible()">Battery</input>
+</div>
+<div style="color:#00AA00;font-size:30px">
+<div id="cdiv_ecg">ECG data<br><canvas id="chart_ecg" width="1000" height="400"></canvas></div>
+<div id="cdiv_poincare">Poincare plot<br><canvas id="chart_poincare" width="600" height="600"></canvas><br></div>
+<div id="cdiv_bpm">BPM<br><canvas id="chart_bpm" width="1000" height="200"></canvas></div>
+<div id="cdiv_hrv">HRV<br><canvas id="chart_hrv" width="1000" height="200"></canvas></div>
+<div id="cdiv_gsr">GSR<br><canvas id="chart_gsr" width="1000" height="200"></canvas></div>
+<div id="cdiv_steps">Steps rate<br><canvas id="chart_steps" width="1000" height="200"></canvas></div>
+<div id="cdiv_accel">Acceleration<br><canvas id="chart_accel" width="1000" height="200"></canvas></div>
+<div id="cdiv_temp">Temperature<br><canvas id="chart_temp" width="1000" height="200"></canvas></div>
+<div id="cdiv_batt">Battery voltage (mV)<br><canvas id="chart_batt" width="1000" height="200"></canvas></div>
+</div>
+<br>
+
+<div style="color:#00AA00">
+<input type="checkbox" checked="true" id="save_ecg" onchange="update_save_chk()">Record ECG</input>
+<input type="checkbox" checked="true" id="save_rr" onchange="update_save_chk()">Record RR data</input>
+<input type="checkbox" checked="true" id="save_data" onchange="update_save_chk()">Record other data</input>
+<br>
+<input type="button" id="btn_save" value="Start record" onclick="toggle_save()"><br><br>
+</div>
+<div style="color:#00AA00">
+<div id="BPM">BPM: ~</div><br>
+<div id="battery_level">Battery: ~</div><br>
+
+<h2 id="fw_upload_label">Firmware upload section (click to expand)</h2>
+<div id="fw_upload" style="display:none">
+<h3>Uploading USB base firmware:</h3> 
+Unplug the base, select the file, then plug in the base <br>
+<input type="file" id="base-file">(select ubase.bin file)</input><br><br>
+<div id="base_upload_progress" style="width:100%;background-color:#202020;display:none;">
+  <div id="base_upload_bar" style="width:0%;height:30px;background-color:#00FF00;"></div>
+</div><br>
+<h3>Uploading uECG device firmware (via radio):</h3> 
+The base must be plugged in.<br>
+Turn off the device, select the file, turn on the device and immediately after switching it on, press a button on it <br>
+<input type="file" id="uecg-file">(select uecg.bin file)</input><br><br>
+<div id="uecg_upload_progress" style="width:100%;background-color:#202020;display:none;">
+  <div id="uecg_upload_bar" style="width:0%;height:30px;background-color:#00FF00;"></div>
+</div><br>
+<br>
+</div>
+</div>
+</body>
+</html>
