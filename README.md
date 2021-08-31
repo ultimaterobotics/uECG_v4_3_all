@@ -1,7 +1,6 @@
 # uECG
 uECG - very small wearable ECG device that sends raw and processed data over BLE
-
-![alt text](https://cdn.hackaday.io/files/1644867037369024/uECG_v22a2.png)
+**This is an old repository - new version is located here: https://github.com/ultimaterobotics/uECG (and is divided into multiple repositories for relevant parts of the project, links are in description)**
 
 Project is in active development stage, at the current moment we have shared:
  * schematics and PCB design
